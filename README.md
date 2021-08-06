@@ -148,16 +148,28 @@ Note that in case of `api`, ProtoPie Enterprise may not work well with version d
 
 As you might have noticed from the docker-compose services name, `web` sends requests to `api` to get data and shows in page. These are coupled tightly but isolated as a service. Therefore, make sure that `web` and `api` versions have a matching minor version (not patch version). If the versions are mismatched, requests from `web` will return a response with an error message.
 
-# Running out of Disk Space & Backup
+#### Running out of Disk Space & Backup
 
 Uploaded Pies with images and database data would use the most disk space. It's needed to check for available disk space and create backups in case of unexpected issues. If you want create a backup, see the docker volumes below for what you need to copy.
 
 * `api_upload`: where a Pie has been uploaded to.
- docker cp [[BACKUP_PATH]] protopie_api_1:/app/
- ex: docker cp ./upload protopie_api_1:/app/
 
+ docker cp protopie_api_1:/app/upload [[BACKUP_PATH]]
+ 
 * `pg_data`: where the database data is stored.
-  cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i protopie_db_1 psql -U protopie_w protopie
+
+  docker exec protopie_db_1 pg_dump -c -U protopie_r protopie > [[BACKUP_PATH]]/protopie_db_`date +%y%m%d%H%M%S`.sql
+
+#### Pie file and DataBases Restore
+* `api_upload`: uploaded data is restore
+
+ docker cp [[BACKUP_PATH]] protopie_api_1:/app/
+
+ ex: docker cp ./upload protopie_api_1:/app/ 
+ 
+* `pg_data`: database data is restore.
+
+cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U protopie_w protopie
 
 
 # update
