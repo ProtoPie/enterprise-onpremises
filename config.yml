@@ -1,0 +1,15 @@
+# Hostname for servers
+servers:
+  http: [[your url (e.g. http://your.domain)]]
+  update: https://autoupdate.protopie.io
+
+# Mail Server Settings
+mail:
+  from: [[The e-mail address used in the "From" field in e-mails sent by ProtoPie]]
+  smtp:
+    host: [[your mail smtp host]]
+    port: [[your mail smtp port]]
+    user: [[your mail smtp user]]
+    pass: [[your mail smtp password]]
+    tls: false
+    ssl: false

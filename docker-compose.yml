@@ -1,0 +1,49 @@
+version: '3.0'
+
+services:
+  nginx:
+    image: nginx:1.14.0-alpine
+    hostname: ppeop_nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-html:/usr/share/nginx/html:ro
+    ports:
+      - 80:80
+    links:
+      - web
+      - api
+
+  web:
+    image: protopie/enterprise-onpremises:web-2021.6.3
+    hostname: ppeop_web
+
+  api:
+    image: protopie/enterprise-onpremises:api-2021.6.3
+    hostname: ppeop_api
+    env_file:
+      - api.env
+      - db.env
+    volumes:
+      - api_logs:/app/logs
+      - api_upload:/app/upload
+      - api_download:/app/download
+      - ./default:/app/default
+      - ./config.yml:/app/resources/config.yml:ro
+      - ./license.pem:/app/resources/license.pem:ro
+    links:
+      - db
+
+  db:
+    image: postgres:10.5-alpine
+    hostname: ppeop_db
+    env_file: db.env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./db-init/01-init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+      - ./db-init/02-init-db.sh:/docker-entrypoint-initdb.d/02-init-db.sh:ro
+
+volumes:
+  api_logs: {}
+  api_upload: {}
+  api_download: {}
+  pg_data: {}

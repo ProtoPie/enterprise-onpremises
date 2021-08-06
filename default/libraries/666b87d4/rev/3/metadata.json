@@ -1,0 +1,18 @@
+[
+  {
+    "id": "3898ee74c4c64adf6d6e57447763f7d19bc542fa.png",
+    "type": "image",
+    "width": 96,
+    "height": 96,
+    "fileSize": 1627,
+    "imageLayerResourceType": "nativeImage"
+  },
+  {
+    "id": "aebad03fafbc86346f877db9354dfcc354774881.svg",
+    "type": "image",
+    "width": 28,
+    "height": 28,
+    "fileSize": 449,
+    "imageLayerResourceType": "emptysvg"
+  }
+]

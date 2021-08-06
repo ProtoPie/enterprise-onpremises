@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.protopie.companion",
+      "sha256_cert_fingerprints": [
+        "28:B3:75:34:AC:E5:45:61:B9:4B:70:C5:82:C0:5D:FD:BC:41:0C:44:02:CE:D9:3C:B7:68:7C:04:0B:D7:17:2D",
+        "0A:CD:5B:D1:F4:94:05:A5:DE:D7:68:93:48:B9:50:02:65:F2:67:7D:02:A7:45:90:07:E8:63:93:AA:60:D0:E8"
+      ]
+    }
+  }
+]

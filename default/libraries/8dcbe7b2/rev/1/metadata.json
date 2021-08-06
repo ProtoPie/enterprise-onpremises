@@ -1,0 +1,78 @@
+[
+  {
+    "id": "9fd0659133134d3a9a3b376c9302256c17ad3a41.png",
+    "type": "image",
+    "width": 66,
+    "height": 34,
+    "fileSize": 366
+  },
+  {
+    "id": "be8f677a0104cadc982331307ada8b27d5b425af.png",
+    "type": "image",
+    "width": 4,
+    "height": 12,
+    "fileSize": 173
+  },
+  {
+    "id": "9169c0c3738efbc90bbf28ed35cc70473644e373.png",
+    "type": "image",
+    "width": 54,
+    "height": 22,
+    "fileSize": 212
+  },
+  {
+    "id": "f2542ef9cd395c522f69eafd7bb2ca313f467cdf.png",
+    "type": "image",
+    "width": 46,
+    "height": 33,
+    "fileSize": 411
+  },
+  {
+    "id": "ac692ce7ce41e55c94ed89c4426cd5c6e3a44616.png",
+    "type": "image",
+    "width": 51,
+    "height": 32,
+    "fileSize": 248
+  },
+  {
+    "id": "ef6a675f938c7e9626951aafc4ca7668da5b6952.png",
+    "type": "image",
+    "width": 86,
+    "height": 34,
+    "fileSize": 716
+  },
+  {
+    "id": "9bbc047d3df8babbeda247365bcee1465b92fe4d.png",
+    "type": "image",
+    "width": 72,
+    "height": 72,
+    "fileSize": 2419,
+    "imageLayerResourceType": "nativeImage"
+  },
+  {
+    "id": "1297fd5369d380aaf0f3e5acdc7a6e4ade1449c5.lottie",
+    "type": "lottie",
+    "width": 300,
+    "height": 300,
+    "fileSize": 22832,
+    "duration": 1.0666666666666667,
+    "isStableLottie": true
+  },
+  {
+    "id": "bd459c659113f1a670e641c1a4497d1b91ed2f41.lottie",
+    "type": "lottie",
+    "width": 300,
+    "height": 300,
+    "fileSize": 22820,
+    "duration": 1.0666666666666667,
+    "isStableLottie": true
+  },
+  {
+    "id": "499027fb8a89f992202293a210e042a010d4cb27.png",
+    "type": "image",
+    "width": 2250,
+    "height": 399,
+    "fileSize": 70795,
+    "imageLayerResourceType": "nativeImage"
+  }
+]
