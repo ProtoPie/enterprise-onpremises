@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   nginx:
-    image: nginx:1.14.0-alpine
+    image: nginx:1.21.1-alpine
     hostname: ppeop_nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
@@ -14,11 +14,11 @@ services:
       - api
 
   web:
-    image: protopie/enterprise-onpremises:web-2021.7.1
+    image: protopie/enterprise-onpremises:web-2021.8.1
     hostname: ppeop_web
 
   api:
-    image: protopie/enterprise-onpremises:api-2021.7.1
+    image: protopie/enterprise-onpremises:api-2021.8.1
     hostname: ppeop_api
     env_file:
       - api.env
