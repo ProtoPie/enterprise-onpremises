@@ -133,7 +133,7 @@ servers:
 
 These docker images is based on linux. So if you are on windows, recommend that using `Docker for Windows` with hyper-v to run linux container on windows. See below link for the details. 
 
-* https://docs.docker.com/docker-for-windows 
+* https://docs.docker.com/docker-for-windows
 
 ## Caveats
 
@@ -183,10 +183,10 @@ cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U proto
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-2021.8.1
+image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-2021.8.4
 
 api:
-image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-2021.8.1
+image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-2021.8.4
 
 ```
 
@@ -212,10 +212,10 @@ image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterpri
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-2021.8.1
+image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-2021.8.4
 
 api:
-image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-2021.8.1
+image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-2021.8.4
 
 ```
 
