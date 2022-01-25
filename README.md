@@ -183,10 +183,10 @@ cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U proto
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-2021.8.4
+image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-2021.8.7
 
 api:
-image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-2021.8.4
+image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-2021.8.7
 
 ```
 
@@ -212,10 +212,10 @@ image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterpri
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-2021.8.4
+image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-2021.8.7
 
 api:
-image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-2021.8.4
+image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-2021.8.7
 
 ```
 
