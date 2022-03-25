@@ -194,9 +194,9 @@ image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterpri
 
 5. Move to cd prototype file path (e.g.=> cd c:\local\lib\protopie )
 
-6. Docker-compose stop
+6. docker-compose stop
 
-7. Docker-compose rm (delete service)
+7. docker-compose rm (delete service)
 
 8. docker-compose up -d (install and run updated version)
 
@@ -212,10 +212,10 @@ image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterpri
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-8.11.1
+image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-8.12.0
 
 api:
-image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-8.11.1
+image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-8.12.0
 
 ```
 
