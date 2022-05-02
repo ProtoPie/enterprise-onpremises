@@ -173,9 +173,9 @@ cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U proto
 
 
 # update
-## How to update the prototype On-Primes (window)
+## How to update the protopie On-Primes (window)
 
-1. Navigate to the path of the prototype file in Windows Explorer (e.g.=> (c:\local\lib\protopie)
+1. Navigate to the path of the protopie file in Windows Explorer (e.g.=> (c:\local\lib\protopie)
 
 2. Open the docker-compose.yml file
 
@@ -183,16 +183,16 @@ cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U proto
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-8.11.1
+image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-8.13.0
 
 api:
-image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-8.11.1
+image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-8.13.0
 
 ```
 
 4. Enter "cmd" in window key + r (short key) => Run window
 
-5. Move to cd prototype file path (e.g.=> cd c:\local\lib\protopie )
+5. Move to cd protopie file path (e.g.=> cd c:\local\lib\protopie )
 
 6. docker-compose stop
 
@@ -202,7 +202,7 @@ image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterpri
 
 9. Access "protopie URL" from browser (IE, Chrome)
 
-## How to Update Prototype On-Primes (Liunx)
+## How to Update Protopie On-Primes (Liunx)
 
 1. cd "moving the path of a protocol file" (e.g.=> cd /home/victor)
 
@@ -212,10 +212,10 @@ image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterpri
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-8.12.0
+image: protopie/enterprise-onpremises:web-2021.1.1 => image: protopie/enterprise-onpremises:web-8.13.0
 
 api:
-image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-8.12.0
+image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterprise-onpremises:api-8.13.0
 
 ```
 
