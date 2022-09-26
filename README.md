@@ -173,7 +173,7 @@ cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U proto
 
 
 # update
-## How to update the protopie On-Primes (window)
+## How to update the protopie On-Premises (window)
 
 1. Navigate to the path of the protopie file in Windows Explorer (e.g.=> (c:\local\lib\protopie)
 
@@ -202,7 +202,7 @@ image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterpri
 
 9. Access "protopie URL" from browser (IE, Chrome)
 
-## How to Update Protopie On-Primes (Liunx)
+## How to Update Protopie On-Premises (Liunx)
 
 1. cd "moving the path of a protocol file" (e.g.=> cd /home/victor)
 
