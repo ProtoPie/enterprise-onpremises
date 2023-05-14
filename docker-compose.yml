@@ -14,11 +14,11 @@ services:
       - api
 
   web:
-    image: protopie/enterprise-onpremises:web-9.18.2
+    image: protopie/enterprise-onpremises:web-9.19.0
     hostname: ppeop_web
 
   api:
-    image: protopie/enterprise-onpremises:api-9.18.2
+    image: protopie/enterprise-onpremises:api-9.19.0
     hostname: ppeop_api
     env_file:
       - api.env
