@@ -229,7 +229,7 @@ image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterpri
 
 
 ## Trouble Shooting Guide
-#### docker logs (postgres:10.5-alphine docker container) "/bin/bash^m: bad interface: no such file or directory" error when it occurs
+#### docker logs (postgres:10.5-alphine docker container) "/bin/bash: bad interface: no such file or directory" error when it occurs
 
 If you use Sublime Text on Windows or Mac to edit your scripts:
 Click on View > Line Endings > Unix and save the file again.
@@ -244,12 +244,12 @@ If you use vi to edit your scripts:
 vi run.sh
 :set fileformat=unix
 
-#### ProPie Server restart (move ProPie Server install path)
+#### ProtoPie Server restart (move ProtoPie Server install path)
 docker-compose protopie restart
 
-#### ProPie Server stop (move ProPie Server install path)
+#### ProtoPie Server stop (move ProtoPie Server install path)
 docker-compose protopie stop
 
-#### ProPie Server logs  (move ProPie Server install path)
+#### ProtoPie Server logs  (move ProtoPie Server install path)
 docker-compose protopie logs
 
