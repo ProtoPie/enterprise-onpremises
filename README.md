@@ -229,7 +229,7 @@ image: protopie/enterprise-onpremises:api-2021.1.1 => image: protopie/enterpri
 
 
 ## Trouble Shooting Guide
-#### docker logs (postgres:10.5-alphine docker container) "/bin/bash^M: bad interfreter: no such file or directory" error when it occurs
+#### docker logs (postgres:10.5-alphine docker container) "/bin/bash^M: bad interpreter: no such file or directory" error when it occurs
 
 If you use Sublime Text on Windows or Mac to edit your scripts:
 Click on View > Line Endings > Unix and save the file again.
