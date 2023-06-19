@@ -110,10 +110,10 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx-html:/usr/share/nginx/html:ro
-      - locla file path : docker container file path ## ex: ./ssl/protopie.key:/etc/nginx/ssl/protopie.key:ro
-      - locla file path : docker container file path ## ex: ./ssl/protopie.crt:/etc/nginx/ssl/protopie.crt:ro
+      - local file path : docker container file path ## ex: ./ssl/protopie.key:/etc/nginx/ssl/protopie.key:ro
+      - local file path : docker container file path ## ex: ./ssl/protopie.crt:/etc/nginx/ssl/protopie.crt:ro
     ports:
-      - 443:443    ## modify =>locla port : docker container port
+      - 443:443    ## modify =>local port : docker container port
     links:
       - web
       - api
