@@ -14,11 +14,11 @@ services:
       - api
 
   web:
-    image: protopie/enterprise-onpremises:web-11.0.0
+    image: protopie/enterprise-onpremises:web-11.0.5
     hostname: ppeop_web
 
   api:
-    image: protopie/enterprise-onpremises:api-11.0.0
+    image: protopie/enterprise-onpremises:api-11.0.5
     hostname: ppeop_api
     env_file:
       - api.env
