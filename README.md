@@ -253,3 +253,27 @@ docker-compose protopie stop
 #### ProtoPie Server logs  (move ProtoPie Server install path)
 docker-compose protopie logs
 
+#### Common misconfiguration under HTTP-only environment
+Please check `tls` `ssl` in `config.yml` are `false`
+
+#### In case server has no domain but IP address
+Update `nginx.conf` at line number 45 like below
+```
+        # FROM
+        listen 80;
+
+        location / {
+            proxy_pass http://web_server;
+        }
+```
+```
+        # TO
+        listen 80;
+
+        location / {
+            sub_filter_once off;
+            sub_filter_types text/html;
+            sub_filter "<meta http-equiv=\"Content-Security-Policy\" content=\"upgrade-insecure-requests\"/>" "";
+            proxy_pass http://web_server;
+        }
+```
