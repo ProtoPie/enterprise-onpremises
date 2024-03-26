@@ -229,6 +229,9 @@ image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise
 
 
 ## Trouble Shooting Guide
+
+Always make sure that browser cache is cleared(disabled) after applying this trouble shooting guide.
+
 #### docker logs (postgres:10.5-alphine docker container) "/bin/bash^M: bad interpreter: no such file or directory" error when it occurs
 
 If you use Sublime Text on Windows or Mac to edit your scripts:
