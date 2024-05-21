@@ -1,8 +1,10 @@
+*[English](README.md) ∙ [简体中文](docs/README.zh-Hans.md) ∙ [日本語](docs/README.ja.md) ∙ [한국인](docs/README.ko.md)*
+
 # ProtoPie Enterprise with On-Premises Server
 
-This is the official bootstrap repository for running ProtoPie Enterprise using Docker Compose as an on-premises server.
+This is the official guide for deploying ProtoPie Enterprise using Docker Compose on your on-premises servers.
 
-Clone me. Edit me. Use me.
+To begin, clone this repository, make the necessary configurations as detailed below, and deploy your on-premises server with ease.
 
 ## Software Requirements
  * Docker 1.13.0+
@@ -30,10 +32,10 @@ Clone me. Edit me. Use me.
 
 ProtoPie Enterprise is composed of four services as docker images in Docker Compose. 
 
-* `nginx`
-* `web`
-* `api`
-* `db`
+* `nginx` - The web server
+* `web` - The web application interface
+* `api` - The backend API
+* `db` - The database server
 
 Note that please login with your Docker ID via `docker login` to pull these docker images from docker hub.
 
@@ -69,12 +71,15 @@ Note that `db` data will persist even if the container stops or is removed becau
 
 
 ## HTTPS with a SSL/TLS Certificate
-### When you create SSL certificates (.crt) with Openssl.
-Private issued by the SSL certificate issuing authority.You must have a key and a certificate signing file.(.csr)
+### Generating SSL certificates (.crt) with Openssl.
+When creating SSL certificates (.crt) using OpenSSL, it's necessary to have both a private key (.key) and a Certificate Signing Request (.csr) file.  
 Use the command below.
-
+```bash
 openssl x509 -req -days 365 -in <filename>.csr -signkey <filename>.key -out <filename>.crt
- ex =>  openssl x509 -req -days 365 -in protopie.csr -signkey protopie.key -out protopie.crt
+```
+```bash
+ex =>  openssl x509 -req -days 365 -in protopie.csr -signkey protopie.key -out protopie.crt
+```
 
 
 
@@ -150,32 +155,38 @@ As you might have noticed from the docker-compose services name, `web` sends req
 
 #### Running out of Disk Space & Backup
 
-Uploaded Pies with images and database data would use the most disk space. It's needed to check for available disk space and create backups in case of unexpected issues. If you want create a backup, see the docker volumes below for what you need to copy.
+Uploaded Pies with images and database data will use the most disk space. It is necessary to check for available disk space and create backups to prevent any unexpected issues. If you want to create a backup, check the docker volumes below for what you need to copy.
 
 * `api_upload`: where a Pie has been uploaded to.
-
+```bash
  docker cp protopie_api_1:/app/upload [[BACKUP_PATH]]
+```
  
 * `pg_data`: where the database data is stored.
-
+```bash
   docker exec protopie_db_1 pg_dump -c -U protopie_r protopie > [[BACKUP_PATH]]/protopie_db_`date +%y%m%d%H%M%S`.sql
+```
 
 #### Pie file and DataBases Restore
-* `api_upload`: uploaded data is restore
+* `api_upload`: uploaded data restore.
 
+```bash
  docker cp [[BACKUP_PATH]] protopie_api_1:/app/
 
  ex: docker cp ./upload protopie_api_1:/app/ 
+```
  
-* `pg_data`: database data is restore.
+* `pg_data`: database data restore.
 
+```bash
 cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U protopie_w protopie
+```
 
-
-# update
+# Update
+Before updating, to ensure data safety, it is recommended to create a snapshot image of the server, and also back up the data using the method above and store it in a secure location.
 ## How to update ProtoPie On-Premises (Windows)
 
-1. Navigate to the path of the protopie file in Windows Explorer (e.g.=> (c:\local\lib\protopie)
+1. Navigate to the directory containing the `docker-compose.yml` file in Windows Explorer (e.g.=> c:\local\lib\protopie)
 
 2. Open the docker-compose.yml file
 
@@ -183,10 +194,10 @@ cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U proto
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-10.0.3
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-11.0.5
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-10.0.3
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-11.0.5
 
 ```
 
@@ -194,38 +205,59 @@ image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise
 
 5. Move to cd protopie file path (e.g.=> cd c:\local\lib\protopie )
 
-6. docker-compose stop
+6. Stop the running ProtoPie services:
+```bash
+docker-compose -p protopie stop
+```
 
-7. docker-compose rm (delete service)
+7. Remove the stopped service containers:
+```bash
+docker-compose -p protopie rm
+```
 
-8. docker-compose up -d (install and run updated version)
+8. Start the updated ProtoPie services in detached mode:
+```bash
+docker-compose -p protopie up -d
+```
 
 9. Access "protopie URL" from browser (IE, Chrome)
 
 ## How to update ProtoPie On-Premises (Linux)
 
-1. cd "moving the path of a protocol file" (e.g.=> cd /home/victor)
+1. Navigate to the directory containing the `docker-compose.yml` file: (e.g.=> cd /home/victor/enterprise-onpremises)
 
-2. sudo vi docker-compose.yml (file open)
+2. Open the `docker-compose.yml` file using a text editor:
+```bash
+sudo vi docker-compose.yml
+```
 
 3. Find, modify, and save the following parts
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-10.0.3
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-11.0.5
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-10.0.3
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-11.0.5
 
 ```
 
-4. $/home/victor docker-compose stop
+4. Stop the running ProtoPie services:
+```bash
+docker-compose -p protopie stop
+```
 
-5. $/home/victor docker-compose rm (delete service)
+5. Remove the stopped service containers:
+```bash
+docker-compose -p protopie rm
+```
 
-6. $/home/victor docker-compose up -d (install and run the update version)
+6. Start the updated ProtoPie services in detached mode:
+```bash
+docker-compose -p protopie up -d
+```
 
-7. Connect "protopie URL" from browser (IE, Chrome)
+7. Access "protopie URL" from browser (IE, Chrome)
 
 
 ## Trouble Shooting Guide
@@ -241,20 +273,30 @@ In  notepad++ you can set it for the file specifically by pressing:
 Edit --> EOL Conversion --> UNIX/OSX Format
 
 Remove the spurious CR characters. You can do it with the following command:
+```bash
 sed -i -e 's/\r$//' setup.sh
+```
 
 If you use vi to edit your scripts:
+```bash
 vi run.sh
 :set fileformat=unix
+```
 
 #### ProtoPie Server restart (move ProtoPie Server install path)
-docker-compose protopie restart
+```bash
+docker-compose -p protopie restart
+```
 
 #### ProtoPie Server stop (move ProtoPie Server install path)
-docker-compose protopie stop
+```bash
+docker-compose -p protopie stop
+```
 
 #### ProtoPie Server logs  (move ProtoPie Server install path)
-docker-compose protopie logs
+```bash
+docker-compose -p protopie logs
+```
 
 #### Common misconfiguration under HTTP-only environment
 Please check `tls` `ssl` in `config.yml` are `false`
