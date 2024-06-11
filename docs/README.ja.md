@@ -1,7 +1,7 @@
 
 *[English](../README.md) ∙ [简体中文](README.zh-Hans.md) ∙ [日本語](README.ja.md) ∙ [한국인](README.ko.md)*
 
-# ProtoPie Enterprise オンプレミスサーバー用
+# オンプレミスサーバーにProtoPie Enterpriseをデプロイする
 
 これは、オンプレミスサーバー上でDocker Composeを使用してProtoPie Enterpriseをデプロイするための公式ガイドです。
 
@@ -193,10 +193,10 @@ cat [[バックアップパス]]/protopie_db_xxx.sql |  docker exec -i app_db_1 
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-11.0.5
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-11.0.5
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
 
 ```
 
@@ -234,10 +234,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-11.0.5
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-11.0.5
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
 
 ```
 
@@ -264,6 +264,8 @@ docker-compose -p protopie up -d
 このトラブルシューティングガイドを適用した後は、常にブラウザのキャッシュがクリアされている（無効になっている）ことを確認してください。
 
 #### dockerログ（postgres:10.5-alphine dockerコンテナ）で「/bin/bash^M: bad interpreter: no such file or directory」エラーが発生した場合
+
+この問題は通常、LFとCRLFのエンコーディングの衝突によって引き起こされます。Windows上でgitを使用してリポジトリをクローンし、その後Windows用Dockerを使用してデプロイする場合、この問題が発生する可能性があります。この問題を解決するには、少なくとも次の3つのファイルがLFエンコーディング形式であることを確認する必要があります：`db-init\01-init.sh`、`db-init\02-init-db.sh`、および`db.env`。
 
 WindowsまたはMacでSublime Textを使用してスクリプトを編集する場合：
 表示 > 行末文字 > Unixをクリックし、ファイルを再保存します。
@@ -321,3 +323,8 @@ docker-compose -p protopie logs
             proxy_pass http://web_server;
         }
 ```
+
+#### サーバー上のポート80が他のアプリケーションに使用されています
+一部のクライアントのサーバーでポート80が他のアプリケーションによって使用されていることが確認されました。したがって、ProtoPieオンプレミスサービスで使用するポートの変更をお勧めします。これを行うには、`docker-compose.yml`ファイルを編集して`services.nginx.ports`の設定を`80:80`から`8080:80`に変更し、`config.yml`ファイルの`servers.http`を`http://your.domain`から`http://your.domain:8080`に更新してください。これらの手順を完了した後、更新されたURLとポート情報を提供していただければ、新しい証明書を発行します。その後、既存の証明書を交換する必要があります。
+
+ポート80はHTTPのデフォルトポートであるため、通常、Webブラウザーでは表示されません。しかし、サービスポートを8080に変更する場合は、この新しいポートをURLに含める必要があります。たとえば、以前は`http://10.0.5.1`でサービスにアクセスしていた場合、現在は`http://10.0.5.1:8080`を使用する必要があります。

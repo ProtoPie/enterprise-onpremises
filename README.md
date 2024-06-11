@@ -1,6 +1,6 @@
 *[English](README.md) ∙ [简体中文](docs/README.zh-Hans.md) ∙ [日本語](docs/README.ja.md) ∙ [한국인](docs/README.ko.md)*
 
-# ProtoPie Enterprise with On-Premises Server
+# Deploying ProtoPie Enterprise on an On-Premises Server
 
 This is the official guide for deploying ProtoPie Enterprise using Docker Compose on your on-premises servers.
 
@@ -194,10 +194,10 @@ Before updating, to ensure data safety, it is recommended to create a snapshot i
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-11.0.5
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-11.0.5
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
 
 ```
 
@@ -235,10 +235,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-11.0.5
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-11.0.5
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
 
 ```
 
@@ -265,6 +265,8 @@ docker-compose -p protopie up -d
 Always make sure that browser cache is cleared(disabled) after applying this trouble shooting guide.
 
 #### docker logs (postgres:10.5-alphine docker container) "/bin/bash^M: bad interpreter: no such file or directory" error when it occurs
+
+This issue is typically caused by the LF and CRLF encoding conflict. If you clone the repository with git on Windows and then deploy it using Docker for Windows, you might encounter this problem. To resolve this issue, you need to ensure that at least the following three files are in LF encoding format: `db-init\01-init.sh`, `db-init\02-init-db.sh`, and `db.env`.
 
 If you use Sublime Text on Windows or Mac to edit your scripts:
 Click on View > Line Endings > Unix and save the file again.
@@ -322,3 +324,8 @@ Update `nginx.conf` at line number 45 like below
             proxy_pass http://web_server;
         }
 ```
+
+#### Port 80 on server is being used by other applications
+We've noticed that port 80 on some of our clients' servers is occupied by other applications. Therefore, we recommend changing the port used by the ProtoPie On-Premises service. You can do this by editing the `docker-compose.yml` file, changing the `services.nginx.ports` setting from `80:80` to `8080:80`, and updating the `servers.http` in the `config.yml` file from `http://your.domain` to `http://your.domain:8080`. After completing these steps, please provide us with the updated URL and port information so we can issue a new certificate for your service. You will then need to replace the existing certificate.
+
+Note that since port 80 is the default port for HTTP, web browsers typically do not display it. However, if the service port is changed to 8080, you must include this new port in the URL. For example, if you previously accessed the service via `http://10.0.5.1`, you should now use `http://10.0.5.1:8080`.
