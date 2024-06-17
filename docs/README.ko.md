@@ -1,6 +1,6 @@
 *[English](../README.md) ∙ [简体中文](README.zh-Hans.md) ∙ [日本語](README.ja.md) ∙ [한국인](README.ko.md)*
 
-# ProtoPie Enterprise 온프레미스 서버용
+# 온-프레미스 서버에 ProtoPie Enterprise 배포하기
 
 이 문서는 온프레미스 서버에서 Docker Compose를 사용하여 ProtoPie Enterprise를 배포하기 위한 공식 가이드입니다.
 
@@ -192,10 +192,10 @@ cat [[백업_경로]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U pro
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-11.0.5
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-11.0.5
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
 
 ```
 
@@ -233,10 +233,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-11.0.5
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-11.0.5
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
 
 ```
 
@@ -263,6 +263,8 @@ docker-compose -p protopie up -d
 이 문제 해결 가이드를 적용한 후에는 항상 브라우저 캐시가 지워졌는지(비활성화됐는지) 확인하세요.
 
 #### docker 로그(postgres:10.5-alphine 도커 컨테이너) "/bin/bash^M: bad interpreter: no such file or directory" 오류가 발생했을 때
+
+이 문제는 일반적으로 LF와 CRLF 인코딩 충돌로 인해 발생합니다. Windows에서 git을 사용하여 저장소를 복제한 다음 Windows용 Docker를 사용하여 배포하면 이 문제가 발생할 수 있습니다. 이 문제를 해결하려면 적어도 다음 세 파일이 LF 인코딩 형식인지 확인해야 합니다: `db-init\01-init.sh`, `db-init\02-init-db.sh`, 그리고 `db.env`.
 
 Windows 또는 Mac에서 Sublime Text를 사용하여 스크립트를 편집하는 경우:
 보기 > 줄 끝 > Unix를 클릭하고 파일을 다시 저장하세요.
@@ -320,3 +322,8 @@ docker-compose -p protopie logs
             proxy_pass http://web_server;
         }
 ```
+
+#### 서버의 포트 80이 다른 애플리케이션에 의해 사용되고 있습니다
+일부 고객의 서버에서 80번 포트가 다른 애플리케이션에 의해 사용되고 있음을 확인했습니다. 따라서 ProtoPie 온프레미스 서비스가 사용하는 포트를 변경하는 것이 좋습니다. 이를 위해 `docker-compose.yml` 파일을 수정하여 `services.nginx.ports` 설정을 `80:80`에서 `8080:80`로 변경하고, `config.yml` 파일 내의 `servers.http`를 `http://your.domain`에서 `http://your.domain:8080`로 업데이트해 주세요. 이 단계를 완료한 후, 업데이트된 URL과 포트 정보를 제공해 주시면 새로운 인증서를 발급해 드립니다. 그 후, 기존 인증서를 교체해야 합니다.
+
+80번 포트는 HTTP의 기본 포트이기 때문에 웹 브라우저는 일반적으로 이를 표시하지 않습니다. 하지만 서비스 포트를 8080으로 변경하는 경우, URL에 이 새로운 포트를 포함시켜야 합니다. 예를 들어, 이전에 `http://10.0.5.1`을 통해 서비스에 접근했다면, 이제는 `http://10.0.5.1:8080`을 사용해야 합니다.

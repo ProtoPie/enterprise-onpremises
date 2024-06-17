@@ -1,6 +1,6 @@
 *[English](../README.md) ∙ [简体中文](README.zh-Hans.md) ∙ [日本語](README.ja.md) ∙ [한국인](README.ko.md)*
 
-# ProtoPie Enterprise 带有本地服务器
+# 在本地服务器上部署ProtoPie Enterprise
 
 这是使用Docker Compose在您的本地服务器上部署ProtoPie Enterprise的官方指南。
 
@@ -190,10 +190,10 @@ cat [[备份路径]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U prot
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-11.0.5
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-11.0.5
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
 
 ```
 
@@ -231,10 +231,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-11.0.5
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-11.0.5
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
 
 ```
 
@@ -260,6 +260,8 @@ docker-compose -p protopie up -d
 在应用此故障排除指南后，请始终确保浏览器缓存已清除（禁用）。
 
 #### docker日志（postgres:10.5-alphine docker容器）出现"/bin/bash^M: bad interpreter: no such file or directory"错误时
+
+这个问题通常是由LF与CRLF编码冲突导致的。如果你在Windows上使用git克隆仓库，然后使用Windows版Docker进行部署，你可能会遇到这个问题。要解决这个问题，你需要确保至少以下三个文件是LF编码格式：`db-init\01-init.sh`、`db-init\02-init-db.sh`以及`db.env`。
 
 如果您在Windows或Mac上使用Sublime Text编辑脚本：
 点击视图 > 行结束符 > Unix并再次保存文件。
@@ -317,3 +319,7 @@ docker-compose -p protopie logs
             proxy_pass http://web_server;
         }
 ```
+#### 服务器上的80端口正被其他应用程序使用
+我们发现一些客户服务器上的80端口已被其他应用占用。因此，建议更改ProtoPie本地服务使用的端口。您可以通过修改`docker-compose.yml`文件，将`services.nginx.ports`项从`80:80`调整为`8080:80`，并且更新`config.yml`文件中的`servers.http`项，从`http://your.domain`更改为`http://your.domain:8080`。完成这些步骤后，请向我们提供更新后的URL和端口信息，以便我们为您的服务提供新证书。之后，您需要替换现有证书。
+
+请注意，由于80端口是HTTP的默认端口，Web浏览器通常不显示。但如果服务端口更改为8080，您则需要在URL中指明新端口。例如，原先通过`http://10.0.5.1`访问服务的，现在应改为`http://10.0.5.1:8080`。
