@@ -12,10 +12,12 @@ services:
     links:
       - web
       - api
+    restart: always
 
   web:
     image: protopie/enterprise-onpremises:web-13.1.0
     hostname: ppeop_web
+    restart: always
 
   api:
     image: protopie/enterprise-onpremises:api-13.1.0
@@ -32,6 +34,7 @@ services:
       - ./license.pem:/app/resources/license.pem:ro
     links:
       - db
+    restart: always
 
   db:
     image: postgres:10.5-alpine
@@ -41,9 +44,11 @@ services:
       - pg_data:/var/lib/postgresql/data
       - ./db-init/01-init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
       - ./db-init/02-init-db.sh:/docker-entrypoint-initdb.d/02-init-db.sh:ro
+    restart: always
 
 volumes:
   api_logs: {}
   api_upload: {}
   api_download: {}
   pg_data: {}
+  

@@ -4,12 +4,25 @@
 
 This is the official guide for deploying ProtoPie Enterprise using Docker Compose on your on-premises servers.
 
-To begin, clone this repository, make the necessary configurations as detailed below, and deploy your on-premises server with ease.
+ProtoPie Enterprise is part of the ProtoPie ecosystem and is a cloud environment designed for team collaboration. The cloud environments within the ProtoPie ecosystem include:
 
-## Software Requirements
- * Docker 1.13.0+
- * Docker Compose 1.10.0+
- 
+1. **ProtoPie Cloud (Public Cloud Environment)**: For Free, Basic, and Pro plan users, accessible at https://cloud.protopie.io
+2. **ProtoPie Enterprise Cloud Environment**: Includes the following deployment options:
+   - **Private Cloud**: A dedicated space on AWS for specific customers, accessible at https://your-organization.protopie.cloud
+   - **On-Premises**: Deployed on your organization's own servers, accessible via the server's IP (e.g., http://192.168.xxx.xxx) or domain name (e.g., https://protopie.your.domain). This document will discuss this deployment method.
+
+To learn more about the ProtoPie ecosystem, please visit:
+- [ProtoPie Ecosystem](https://www.protopie.io/learn/docs/introducing-protopie/protopie-ecosystem)
+- [ProtoPie Cloud](https://www.protopie.io/learn/docs/cloud/getting-started)
+- [ProtoPie Enterprise](https://www.protopie.io/learn/docs/enterprise/getting-started)
+
+## Deployment Preparation
+Before deploying ProtoPie Enterprise on your server, ensure you meet the following hardware, operating system, and software requirements. Also, provide us with the URL you plan to use to access the server. This URL will be used for browser access to the cloud environment and for logging in via ProtoPie Studio, ProtoPie Connect, or ProtoPie Player using the “Log in with Secure Enterprise” feature.
+
+We will generate a certificate pem file based on the URL you provide. During deployment, the server will need internet access to pull Docker images. After deployment, if necessary, you can disconnect from the internet according to your organization's security policies.
+
+Note: We generally recommend deploying ProtoPie Enterprise On-Premise on a dedicated Linux server and installing ProtoPie Studio and ProtoPie Connect on separate PCs to connect to the server. In special cases, such as for testing or if you are the sole user, you can deploy ProtoPie Enterprise On-Premise and install ProtoPie Studio and ProtoPie Connect on the same PC (Windows or macOS).
+
 ## Hardware Requirements
 |             	| Qty 	| CPU(core) 	| Memory 	|
 |-------------	|-----	|-----------	|--------	|
@@ -17,97 +30,119 @@ To begin, clone this repository, make the necessary configurations as detailed b
 | Recommended 	| 1   	| 2 cores 64bits| 8GB    	|
 * Storage: Depends on how many prototypes will be saved. 
 
-## OS Requirements
+## Operating System Requirements
+If you can perform a fresh installation of the server operating system, it is recommended to use the latest LTS version of Linux Debian 12.
 ### Linux
-* CentOS 7+
 * Debian 9+
 * Fedora 28+
 * Ubuntu 18.04+
 ### Windows
-* Windows 10 64bit : Pro, Enterprise or Education (1607 Anniversary Update, Build 14393 or later)
+* Windows 10 64-bit: Professional, Enterprise, or Education editions (1607 Anniversary Update, Build 14393 or higher)
 ### macOS
 * 10.12+
 
-## Services in Docker Compose
+## Software Requirements
+ * Docker 1.13.0+
+ * Docker Compose 1.10.0+
 
-ProtoPie Enterprise is composed of four services as docker images in Docker Compose. 
+## Preparatory Work
 
-* `nginx` - The web server
-* `web` - The web application interface
-* `api` - The backend API
-* `db` - The database server
+### Clone the Repository
 
-Note that please login with your Docker ID via `docker login` to pull these docker images from docker hub.
+```bash
+git clone https://github.com/ProtoPie/enterprise-onpremises.git
+```
 
-## Prerequisites
+### Modify Files
 
-Open the following files, follow the steps below, and edit these files accordingly, before getting ProtoPie Enterprise up and running.
+Before running ProtoPie Enterprise, check and modify the following files:
 
 #### license.pem
 
-Move the `license.pem` file to the same directory as `docker-compose.yml`.
+Rename the pem certificate file we generate to `license.pem` and move it to the same directory as the `docker-compose.yml` file.
 
 #### config.yml
 
-The `config.yml` file holds the basic configurations of ProtoPie Enterprise. For example, 
-* `servers.http`: The URL that ProtoPie Enterprise runs on. (e.g. http://your.domain)
-* `mail.smtp`: SMTP configuration to send emails. (e.g. inviting members or changing password.)
+The `config.yml` file contains basic configuration for ProtoPie Enterprise, such as:
+
+- `servers.http`: URL where ProtoPie Enterprise will run (e.g., `http://192.168.xxx.xxx` or `https://protopie.your.domain`).
+- `mail.smtp`: SMTP configuration for sending emails (e.g., for inviting members or changing passwords). If not configured, you will need to manually copy the invitation link and send it to the invitees.
 
 #### db.env
 
-The `xxx.env` files represent environment variables in the application. `db.env` that has two parts of configurations `root user` and `protopie db` for initial db to create user and database.
+The `db.env` file contains configuration for initializing the database, including `root user` and `protopie db`. This file may not need modification.
 
-## Up and Running
+### Configure HTTPS or No Encryption
 
-Once you have edited the aforementioned files, you are ready to up the docker containers in `docker-compose.yml` and run ProtoPie Enterprise. Execute below command to run the containers in the background via docker-compose. 
+We strongly recommend using HTTPS for security reasons, but you can choose not to use HTTPS.
 
-```bash
-$ docker-compose -p protopie up -d
+#### If Not Using HTTPS
+
+If not using HTTPS, such as using an IP address without a domain, modify the `nginx.conf` file as follows to support non-HTTPS operation:
+
+Change line 45 from:
+
+```nginx
+listen 80;
+
+location / {
+    proxy_pass http://web_server;
+}
 ```
 
-Then, you can access it at `http://your.domain`. If you want to use another port, modify `services.nginx.port` in `docker-compose.yml` and `servers.http` in `config.yml`.
+To:
 
-Note that `db` data will persist even if the container stops or is removed because `db` is bind-mounted to the host file system. 
+```nginx
+listen 80;
 
+location / {
+    sub_filter_once off;
+    sub_filter_types text/html;
+    sub_filter "<meta http-equiv=\"Content-Security-Policy\" content=\"upgrade-insecure-requests\"/>" "";
+    proxy_pass http://web_server;
+}
+```
 
-## HTTPS with a SSL/TLS Certificate
-### Generating SSL certificates (.crt) with Openssl.
-When creating SSL certificates (.crt) using OpenSSL, it's necessary to have both a private key (.key) and a Certificate Signing Request (.csr) file.  
-Use the command below.
+#### If Using HTTPS
+
+##### Generate SSL Certificate (.crt) Using OpenSSL
+
+Use the following command to create an SSL certificate (.crt), ensuring you have both the private key (.key) and certificate signing request (.csr) files:
+
 ```bash
 openssl x509 -req -days 365 -in <filename>.csr -signkey <filename>.key -out <filename>.crt
 ```
+
+For example:
+
 ```bash
-ex =>  openssl x509 -req -days 365 -in protopie.csr -signkey protopie.key -out protopie.crt
+openssl x509 -req -days 365 -in protopie.csr -signkey protopie.key -out protopie.crt
 ```
 
+##### Modify Relevant Files
 
+If you have an SSL/TLS certificate, insert the following configuration into the `nginx.conf` file properly:
 
-We highly recommend that you use HTTPS for security and safety reasons. If you have a SSL/TLS certificate, insert this configuration into the `nginx.conf` file properly.
+```nginx
+server {
+    listen 443;
+    server_name localhost;
+    ssl on;
+    ssl_certificate /etc/nginx/ssl/protopie.crt; # docker container file path
+    ssl_certificate_key /etc/nginx/ssl/protopie.key; # docker container file path
 
-```nginx conf
-          .
-          .
-          .
-     server {
-        listen       443;
-        server_name  localhost;
-        ssl     on;
-        ssl_certificate         modify => docker container SSL file path  ## /etc/nginx/ssl/protopie.crt;
-        ssl_certificate_key     modify => docker container SSL file path  ## /etc/nginx/ssl/protopie.key;
-        container SSL file path
+    ssl_session_timeout 5m;
+    ssl_protocols SSLv2 SSLv3 TLSv1;
 
-         ssl_session_timeout  5m;
-         ssl_protocols SSLv2 SSLv3 TLSv1;
-                 .
-                 .
-                 .
+    location / {
+        proxy_pass http://web_server;
     }
+}
 ```
 
-Modify the docker-compose.yml file as follows
+Modify the `docker-compose.yml` file as follows:
 
-```docker-compose.yml
+```yaml
 services:
   nginx:
     image: nginx:1.21.1-alpine
@@ -115,130 +150,149 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx-html:/usr/share/nginx/html:ro
-      - local file path : docker container file path ## ex: ./ssl/protopie.key:/etc/nginx/ssl/protopie.key:ro
-      - local file path : docker container file path ## ex: ./ssl/protopie.crt:/etc/nginx/ssl/protopie.crt:ro
+      - ./ssl/protopie.key:/etc/nginx/ssl/protopie.key:ro  # Local file path : docker container file path
+      - ./ssl/protopie.crt:/etc/nginx/ssl/protopie.crt:ro  # Local file path : docker container file path
     ports:
-      - 443:443    ## modify =>local port : docker container port
+      - 443:443  # Local port : docker container port
     links:
       - web
       - api
 ```
 
+Modify the `config.yml` file to ensure HTTPS usage:
 
-Modify the config.yml file as follows
-
-```config.yml
+```yaml
 servers:
-  http: https://your-domain         ## ex : https://protopie.com
+  http: https://protopie.your.domain  
   update: https://autoupdate.protopie.io
-
 ```
 
-## For Windows
+## Start and Run
 
-These docker images is based on linux. So if you are on windows, recommend that using `Docker for Windows` with hyper-v to run linux container on windows. See below link for the details. 
+After editing the above files, you can start the Docker containers and run ProtoPie Enterprise. Use the following command to run the containers in the background:
 
-* https://docs.docker.com/docker-for-windows
-
-## Caveats
-
-#### Version Downgrading
-
-Note that in case of `api`, ProtoPie Enterprise may not work well with version downgrading. Because each major or minor version updates may contain changes in the db scheme, every time `api` checks it while bootstrapping and `api` will try to migrate db if a version update contains changes in the db scheme. Hence, in case of version downgrading, `api` might raise an error due to a migrated db scheme.
-
-* enterprise-web-1.0.2 / enterprise-api-1.0.8 (O)
-* enterprise-web-1.0.2 / enterprise-api-1.1.2 (X)
-
-#### Version Mismatch
-
-As you might have noticed from the docker-compose services name, `web` sends requests to `api` to get data and shows in page. These are coupled tightly but isolated as a service. Therefore, make sure that `web` and `api` versions have a matching minor version (not patch version). If the versions are mismatched, requests from `web` will return a response with an error message.
-
-#### Running out of Disk Space & Backup
-
-Uploaded Pies with images and database data will use the most disk space. It is necessary to check for available disk space and create backups to prevent any unexpected issues. If you want to create a backup, check the docker volumes below for what you need to copy.
-
-* `api_upload`: where a Pie has been uploaded to.
-```bash
- docker cp protopie_api_1:/app/upload [[BACKUP_PATH]]
-```
- 
-* `pg_data`: where the database data is stored.
-```bash
-  docker exec protopie_db_1 pg_dump -c -U protopie_r protopie > [[BACKUP_PATH]]/protopie_db_`date +%y%m%d%H%M%S`.sql
-```
-
-#### Pie file and DataBases Restore
-* `api_upload`: uploaded data restore.
-
-```bash
- docker cp [[BACKUP_PATH]] protopie_api_1:/app/
-
- ex: docker cp ./upload protopie_api_1:/app/ 
-```
- 
-* `pg_data`: database data restore.
-
-```bash
-cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U protopie_w protopie
-```
-
-# Update
-Before updating, to ensure data safety, it is recommended to create a snapshot image of the server, and also back up the data using the method above and store it in a secure location.
-## How to update ProtoPie On-Premises (Windows)
-
-1. Navigate to the directory containing the `docker-compose.yml` file in Windows Explorer (e.g.=> c:\local\lib\protopie)
-
-2. Open the docker-compose.yml file
-
-3. Find, modify, and save the following parts
-
-```
-web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
-
-api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
-
-```
-
-4. Enter "cmd" in window key + r (short key) => Run window
-
-5. Move to cd protopie file path (e.g.=> cd c:\local\lib\protopie )
-
-6. Stop the running ProtoPie services:
-```bash
-docker-compose -p protopie stop
-```
-
-7. Remove the stopped service containers:
-```bash
-docker-compose -p protopie rm
-```
-
-8. Start the updated ProtoPie services in detached mode:
 ```bash
 docker-compose -p protopie up -d
 ```
 
-9. Access "protopie URL" from browser (IE, Chrome)
+You may need to log in to your Docker ID using `docker login` to pull these Docker images from Docker Hub.
 
-## How to update ProtoPie On-Premises (Linux)
+You can then access it at `http://192.168.xxx.xxx` or `https://protopie.your.domain`.
 
-1. Navigate to the directory containing the `docker-compose.yml` file: (e.g.=> cd /home/victor/enterprise-onpremises)
+### For Windows
 
-2. Open the `docker-compose.yml` file using a text editor:
+These Docker images are based on Linux. If you are using Windows, it is recommended to use `Docker for Windows` with Hyper-V to run Linux containers on Windows. For more details, please refer to the following link.
+
+* https://docs.docker.com/docker-for-windows
+
+### For macOS
+
+If you are using macOS, it is recommended to use HomeBrew and install Docker and Docker Compose with the following commands:
+
 ```bash
-sudo vi docker-compose.yml
+brew install docker docker-compose colima
 ```
 
-3. Find, modify, and save the following parts
+## Common Management Commands
+After successfully deployed, you may need these commands to help you manage and view Docker containers. Note that `docker-compose` commands need to be run in the directory where the `docker-compose.yml` file is located.
+
+```bash
+docker ps
+```
+Lists the currently running Docker containers. ProtoPie Enterprise consists of four services in Docker Compose, all based on Docker images:
+
+* `nginx` - Network server
+* `web` - Web application interface
+* `api` - Backend API
+* `db` - Database server
+
+```bash
+docker-compose -p protopie restart
+```
+Restarts all service containers defined in the `protopie` compose project.
+
+```bash
+docker-compose -p protopie stop
+```
+Stops all service containers defined in the `protopie` compose project.
+
+```bash
+docker-compose -p protopie down
+```
+Stops and removes all services, networks, and cache volumes defined in the `protopie` compose project.
+Note that even if containers are stopped or removed, the `db` data will persist as it is bound to the host file system.
+
+```bash
+docker-compose -p protopie logs
+```
+Displays logs for all services defined in the `protopie` compose project.
+
+```bash
+docker network ls
+```
+Lists all Docker networks.
+
+```bash
+docker volume ls
+```
+Lists all Docker volumes.
+
+```bash
+docker volume rm protopie_api_logs protopie_api_upload protopie_api_download protopie_pg_data
+```
+Deletes all specified Docker volumes. WARNING: This command will delete all data. Only execute this if you have backed up the data and confirmed you need to do so!
+
+## Notes
+
+#### Disk Space and Backup
+
+Uploaded Pies with images and database data will use the most disk space. You must check available disk space regularly and create backups to prevent any unexpected issues. To create backups, check the following Docker volumes for what needs to be copied:
+
+* `api_upload`: Location where Pies are uploaded.
+```bash
+ docker cp protopie_api_1:/app/upload [[BACKUP_PATH]]
+```
+ 
+* `pg_data`: Location where database data is stored.
+```bash
+  docker exec protopie_db_1 pg_dump -c -U protopie_r protopie > [[BACKUP_PATH]]/protopie_db_`date +%y%m%d%H%M%S`.sql
+```
+
+#### Restore Pie Files and Database
+* `api_upload`: Restore uploaded data.
+
+```bash
+ docker cp [[BACKUP_PATH]] protopie_api_1:/app/
+
+ For example: docker cp ./upload protopie_api_1:/app/ 
+```
+ 
+* `pg_data`: Restore database data.
+
+```bash
+cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U protopie_w protopie
+```
+## Upgrading and Downgrading
+Before updating or downgrading, it is recommended to create a snapshot of the server for data safety and also use the backup methods above to store the data in a secure location.
+
+#### Updating Version
+
+1. Navigate to the directory containing the `docker-compose.yml` file (e.g., `cd /home/victor/enterprise-onpremises`)
+   (For Windows, navigate to the directory containing the `docker-compose.yml` file in Windows Explorer (e.g., `c:\local\lib\protopie`))
+
+2. Open the `docker-compose.yml` file with a text editor:
+```bash
+vi docker-compose.yml
+```
+
+3. Find, modify, and save the following sections
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
 
 ```
 
@@ -246,86 +300,60 @@ image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise
 ```bash
 docker-compose -p protopie stop
 ```
+(For Windows: Use Win + R shortcut to open the Run window, type "cmd" to open it, and navigate to the above file path (e.g., `cd c:\local\lib\protopie`))
 
 5. Remove the stopped service containers:
 ```bash
 docker-compose -p protopie rm
 ```
+Note that even if containers are stopped or removed, the `db` data will persist as it is bound to the host file system.
 
 6. Start the updated ProtoPie services in detached mode:
 ```bash
 docker-compose -p protopie up -d
 ```
 
-7. Access "protopie URL" from browser (IE, Chrome)
+7. Access the "protopie URL" from a browser (IE, Chrome)
 
+#### Downgrading Version
 
-## Trouble Shooting Guide
+Note that ProtoPie Enterprise may not support version downgrades well in the `api` case. This is because major or minor version updates might include database schema changes, and the `api` checks this when starting. If a version downgrade occurs, due to the migrated database schema, the `api` might encounter errors.
 
-Always make sure that browser cache is cleared(disabled) after applying this trouble shooting guide.
+* enterprise-web-1.0.2 / enterprise-api-1.0.8 (O)
+* enterprise-web-1.0.2 / enterprise-api-1.1.2 (X)
 
-#### docker logs (postgres:10.5-alphine docker container) "/bin/bash^M: bad interpreter: no such file or directory" error when it occurs
+#### Version Mismatch
 
-This issue is typically caused by the LF and CRLF encoding conflict. If you clone the repository with git on Windows and then deploy it using Docker for Windows, you might encounter this problem. To resolve this issue, you need to ensure that at least the following three files are in LF encoding format: `db-init\01-init.sh`, `db-init\02-init-db.sh`, and `db.env`.
+As you might notice from the Docker Compose service names, `web` sends requests to `api` to fetch data and display it on the page. Although these services are closely coupled, they are isolated as services. Therefore, ensure that `web` and `api` versions have matching minor versions (not patch versions). If versions mismatch, `web` requests will return error messages.
 
-If you use Sublime Text on Windows or Mac to edit your scripts:
-Click on View > Line Endings > Unix and save the file again.
+## Troubleshooting Guide
 
-In  notepad++ you can set it for the file specifically by pressing:
+Always ensure that browser cache is cleared(disabled) after applying this troubleshooting guide.
+
+#### docker logs (postgres:10.5-alphine docker container) "/bin/bash^M: bad interpreter: no such file or directory" error
+This issue is often caused by LF and CRLF encoding conflicts. If you cloned the repository on Windows with git and then deployed using Docker for Windows, you might encounter this issue. Ensure at least the following three files are in LF encoding format: `db-init\01-init.sh`, `db-init\02-init-db.sh`, and `db.env`.
+
+If you use Sublime Text to edit scripts on Windows or macOS:
+Click View > Line Endings > Unix and save the file again.
+
+In Notepad++, you can:
 Edit --> EOL Conversion --> UNIX/OSX Format
 
-Remove the spurious CR characters. You can do it with the following command:
+Remove extra CR characters. You can use the following command to do this:
 ```bash
 sed -i -e 's/\r$//' setup.sh
 ```
 
-If you use vi to edit your scripts:
+If you use `vi` to edit the script:
 ```bash
 vi run.sh
 :set fileformat=unix
 ```
 
-#### ProtoPie Server restart (move ProtoPie Server install path)
-```bash
-docker-compose -p protopie restart
-```
+#### Common Configuration Errors in HTTP Only Environments
+Check if `tls` `ssl` is set to `false` in `config.yml`
 
-#### ProtoPie Server stop (move ProtoPie Server install path)
-```bash
-docker-compose -p protopie stop
-```
+#### Port 80 on the Server is Being Used by Another Application
+We have found that some customer servers have port 80 occupied by other applications. In such cases, you can change the port used by ProtoPie On-Premises services. You can modify the `docker-compose.yml` file to change `services.nginx.ports` from `80:80` to `8080:80`, and update the `config.yml` file's `servers.http` entry from `http://192.168.xxx.xxx` to `http://192.168.xxx.xxx:8080`. After completing these steps, provide us with the updated URL and port information so that we can generate a new certificate for your service. You will need to replace the existing certificate.
 
-#### ProtoPie Server logs  (move ProtoPie Server install path)
-```bash
-docker-compose -p protopie logs
-```
-
-#### Common misconfiguration under HTTP-only environment
-Please check `tls` `ssl` in `config.yml` are `false`
-
-#### In case server has no domain but IP address
-Update `nginx.conf` at line number 45 like below
-```
-        # FROM
-        listen 80;
-
-        location / {
-            proxy_pass http://web_server;
-        }
-```
-```
-        # TO
-        listen 80;
-
-        location / {
-            sub_filter_once off;
-            sub_filter_types text/html;
-            sub_filter "<meta http-equiv=\"Content-Security-Policy\" content=\"upgrade-insecure-requests\"/>" "";
-            proxy_pass http://web_server;
-        }
-```
-
-#### Port 80 on server is being used by other applications
-We've noticed that port 80 on some of our clients' servers is occupied by other applications. Therefore, we recommend changing the port used by the ProtoPie On-Premises service. You can do this by editing the `docker-compose.yml` file, changing the `services.nginx.ports` setting from `80:80` to `8080:80`, and updating the `servers.http` in the `config.yml` file from `http://your.domain` to `http://your.domain:8080`. After completing these steps, please provide us with the updated URL and port information so we can issue a new certificate for your service. You will then need to replace the existing certificate.
-
-Note that since port 80 is the default port for HTTP, web browsers typically do not display it. However, if the service port is changed to 8080, you must include this new port in the URL. For example, if you previously accessed the service via `http://10.0.5.1`, you should now use `http://10.0.5.1:8080`.
+Note that since port 80 is the default port for HTTP, web browsers typically do not show the port. If the service port changes to 8080, you will need to specify the new port in the URL. For example, if the service was accessed via `http://192.168.xxx.xxx`, it should now be `http://192.168.xxx.xxx:8080`.
