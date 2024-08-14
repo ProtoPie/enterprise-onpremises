@@ -276,10 +276,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.3
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.3
 
 ```
 

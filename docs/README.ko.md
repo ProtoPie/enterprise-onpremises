@@ -286,10 +286,10 @@ sudo vi docker-compose.yml
 3. 다음 부분을 찾아 수정하고 저장합니다:
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.3
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.3
 ```
 
 4. 실행 중인 ProtoPie 서비스를 중지합니다:
