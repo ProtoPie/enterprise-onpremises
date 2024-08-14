@@ -242,7 +242,7 @@ docker cp protopie_api_1:/app/upload [[バックアップパス]]
  
 * `pg_data`：データベースデータが保存される場所。
 ```bash
-docker exec protopie_db_1 pg_dump -c -U protopie_r protopie > [[バックアップパス]]/protopie_db_`date +%y%m%d%H%M%S`.sql
+docker exec protopie_db_1 pg_dump -c -U postgres protopie > [[バックアップパス]]/protopie_db_`date +%y%m%d%H%M%S`.sql
 ```
 
 #### Pieファイルとデータベースのリカバリ
@@ -257,7 +257,7 @@ docker cp [[バックアップパス]] protopie_api_1:/app/
 * `pg_data`：データベースデータのリカバリ。
 
 ```bash
-cat [[バックアップパス]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U protopie_w protopie
+cat [[バックアップパス]]/protopie_db_xxx.sql |  docker exec -i protopie_db_1 psql -U postgres protopie
 ```
 ## アップグレードとダウングレード
 データの安全性を確保するために、更新やダウングレード前にサーバーのスナップショットイメージを作成し、上記の方法でデータをバックアップし、安全な場所に保管することをお勧めします。
@@ -276,10 +276,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.3
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.3
 
 ```
 

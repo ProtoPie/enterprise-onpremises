@@ -253,7 +253,7 @@ docker cp protopie_api_1:/app/upload [[백업 경로]]
 
 * `pg_data`: 데이터베이스 데이터가 저장되는 위치.
 ```bash
-docker exec protopie_db_1 pg_dump -c -U protopie_r protopie > [[백업 경로]]/protopie_db_`date +%y%m%d%H%M%S`.sql
+docker exec protopie_db_1 pg_dump -c -U postgres protopie > [[백업 경로]]/protopie_db_`date +%y%m%d%H%M%S`.sql
 ```
 
 #### Pie 파일 및 데이터베이스 복원
@@ -267,7 +267,7 @@ docker cp [[백업 경로]] protopie_api_1:/app/
 
 * `pg_data`: 데이터베이스 데이터 복원.
 ```bash
-cat [[백업 경로]]/protopie_db_xxx.sql | docker exec -i app_db_1 psql -U protopie_w protopie
+cat [[백업 경로]]/protopie_db_xxx.sql |  docker exec -i protopie_db_1 psql -U postgres protopie
 ```
 
 ## 업그레이드 및 다운그레이드
@@ -286,10 +286,10 @@ sudo vi docker-compose.yml
 3. 다음 부분을 찾아 수정하고 저장합니다:
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.3
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.3
 ```
 
 4. 실행 중인 ProtoPie 서비스를 중지합니다:

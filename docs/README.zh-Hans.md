@@ -256,7 +256,7 @@ docker volume rm protopie_api_logs protopie_api_upload protopie_api_download pro
  
 * `pg_data`：数据库数据存储的位置。
 ```bash
-  docker exec protopie_db_1 pg_dump -c -U protopie_r protopie > [[备份路径]]/protopie_db_`date +%y%m%d%H%M%S`.sql
+docker exec protopie_db_1 pg_dump -c -U postgres protopie > [[备份路径]]/protopie_db_`date +%y%m%d%H%M%S`.sql
 ```
 
 #### Pie文件和数据库恢复
@@ -271,7 +271,7 @@ docker volume rm protopie_api_logs protopie_api_upload protopie_api_download pro
 * `pg_data`：数据库数据恢复。
 
 ```bash
-cat [[备份路径]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U protopie_w protopie
+cat [[备份路径]]/protopie_db_xxx.sql |  docker exec -i protopie_db_1 psql -U postgres protopie
 ```
 ## 升级和降级
 更新和降级前，为确保数据安全，建议创建服务器的快照镜像，并使用上述方法备份数据，将其存放在安全的位置。
@@ -290,10 +290,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.0
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.3
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.0
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.3
 
 ```
 
