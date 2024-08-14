@@ -255,7 +255,7 @@ Uploaded Pies with images and database data will use the most disk space. You mu
  
 * `pg_data`: Location where database data is stored.
 ```bash
-  docker exec protopie_db_1 pg_dump -c -U protopie_r protopie > [[BACKUP_PATH]]/protopie_db_`date +%y%m%d%H%M%S`.sql
+docker exec protopie_db_1 pg_dump -c -U postgres protopie > [[BACKUP_PATH]]/protopie_db_`date +%y%m%d%H%M%S`.sql
 ```
 
 #### Restore Pie Files and Database
@@ -270,7 +270,7 @@ Uploaded Pies with images and database data will use the most disk space. You mu
 * `pg_data`: Restore database data.
 
 ```bash
-cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i app_db_1 psql -U protopie_w protopie
+cat [[BACKUP_PATH]]/protopie_db_xxx.sql |  docker exec -i protopie_db_1 psql -U postgres protopie
 ```
 ## Upgrading and Downgrading
 Before updating or downgrading, it is recommended to create a snapshot of the server for data safety and also use the backup methods above to store the data in a secure location.
