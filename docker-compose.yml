@@ -1,4 +1,4 @@
-version: '3.0'
+version: "3.0"
 
 services:
   nginx:
@@ -15,12 +15,12 @@ services:
     restart: always
 
   web:
-    image: protopie/enterprise-onpremises:web-13.1.3
+    image: protopie/enterprise-onpremises:web-14.2.0
     hostname: ppeop_web
     restart: always
 
   api:
-    image: protopie/enterprise-onpremises:api-13.1.3
+    image: protopie/enterprise-onpremises:api-14.2.0
     hostname: ppeop_api
     env_file:
       - api.env
@@ -51,4 +51,3 @@ volumes:
   api_upload: {}
   api_download: {}
   pg_data: {}
-  
