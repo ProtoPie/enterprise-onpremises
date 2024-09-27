@@ -1,4 +1,5 @@
-*[English](../README.md) ∙ [简体中文](README.zh-Hans.md) ∙ [日本語](README.ja.md) ∙ [한국인](README.ko.md)*
+_[English](../README.md) ∙ [简体中文](README.zh-Hans.md) ∙ [日本語](README.ja.md) ∙ [한국인](README.ko.md)_
+
 # 로컬 서버에서 ProtoPie Enterprise 배포
 
 이것은 Docker Compose를 사용하여 로컬 서버에서 ProtoPie Enterprise를 배포하는 공식 가이드입니다.
@@ -11,38 +12,48 @@ ProtoPie Enterprise는 팀 협업을 용이하게 하기 위해 ProtoPie 생태�
    - **On-Premises (로컬 서버)**: 조직의 로컬 서버에 배포되며, 서버의 IP(예: http://192.168.xxx.xxx) 또는 서버의 도메인(예: https://protopie.your.domain)으로 액세스할 수 있습니다. 이 문서에서는 이 배포 방법에 대해 설명합니다.
 
 ProtoPie 생태계에 대해 더 알고 싶으시면 다음 링크를 참조하세요:
+
 - [ProtoPie Ecosystem](https://www.protopie.io/learn/docs/introducing-protopie/protopie-ecosystem)
 - [ProtoPie Cloud](https://www.protopie.io/learn/docs/cloud/getting-started)
 - [ProtoPie Enterprise](https://www.protopie.io/learn/docs/enterprise/getting-started)
 
 ## 배포 준비
-로컬 서버에 ProtoPie Enterprise를 배포하기 전에 다음 하드웨어, 운영 체제 및 소프트웨어 요구 사항을 충족해야 합니다. 다음으로 서버에 액세스하는 데 사용할 URL을 제공해 주세요. 이 URL은 브라우저에서 클라우드 환경에 액세스하는 데 사용되며, ProtoPie Studio, ProtoPie Connect 또는 ProtoPie Player의 "Log in with Secure Enterprise" 기능을 통해 입력됩니다.
 
-이 URL을 바탕으로 인증서 pem 파일을 생성합니다. 배포 과정에서 서버는 인터넷에 연결되어 Docker 이미지를 가져올 수 있어야 합니다. 배포가 완료되면 조직의 보안 정책에 따라 인터넷 연결을 해제할 수 있습니다.
+로컬 서버에 ProtoPie Enterprise를 배포하기 전에 다음 하드웨어, 운영 체제 및 소프트웨어 요구 사항을 충족해야 합니다. 다음으로 서버에 액세스하는 데 사용할 URL을 제공해 주세요. 이 URL은 브라우저에서 클라우드 환경에 액세스하는 데 사용되며, ProtoPie Studio, ProtoPie Connect 또는 ProtoPie Player의 "Log in with Secure Enterprise" 기능을 통해 입력됩니다. 이 URL을 바탕으로 인증서 pem 파일을 생성합니다.
 
 참고: 일반적으로 ProtoPie Enterprise On-Premise를 전용 Linux 서버에 배포하고, 여러 대의 PC에 ProtoPie Studio와 ProtoPie Connect를 설치한 후 서버에 연결하여 사용하는 것을 권장합니다. 특별한 경우, 예를 들어 테스트 목적으로 사용하거나 혼자 사용할 때는 같은 PC(Windows 또는 MacOS)에 ProtoPie Enterprise On-Premise를 배포하고 ProtoPie Studio와 ProtoPie Connect를 설치할 수 있습니다.
 
 ## 하드웨어 요구 사항
-|     	| 수량 	| CPU(코어) 	| 메모리 	|
-|-----	|-----	|-----------	|--------	|
-| 최소 요구 사항 	| 1   	| 1코어 64비트	| 4GB 	|
-| 권장 구성     	| 1   	| 2코어 64비트	| 8GB 	|
-* 저장 공간: 저장할 프로토타입의 양에 따라 다름.
+
+|                | 수량 | CPU(코어)    | 메모리 |
+| -------------- | ---- | ------------ | ------ |
+| 최소 요구 사항 | 1    | 1코어 64비트 | 4GB    |
+| 권장 구성      | 1    | 2코어 64비트 | 8GB    |
+
+- 저장 공간: 저장할 프로토타입의 양에 따라 다름.
 
 ## 운영 체제 요구 사항
+
 서버 운영 체제를 새로 설치할 수 있다면, 최신 버전의 Debian LTS 12를 권장합니다.
+
 ### Linux
-* Debian 9+
-* Fedora 28+
-* Ubuntu 18.04+
+
+- Debian 9+
+- Fedora 28+
+- Ubuntu 18.04+
+
 ### Windows
-* Windows 10 64비트: 프로페셔널, 엔터프라이즈 또는 교육용(1607 주년 업데이트, 빌드 14393 이상)
+
+- Windows 10 64비트: 프로페셔널, 엔터프라이즈 또는 교육용(1607 주년 업데이트, 빌드 14393 이상)
+
 ### macOS
-* 10.12+
+
+- 10.12+
 
 ## 소프트웨어 요구 사항
- * Docker 1.13.0+
- * Docker Compose 1.10.0+
+
+- Docker 1.13.0+
+- Docker Compose 1.10.0+
 
 ## 준비 작업
 
@@ -149,10 +160,10 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx-html:/usr/share/nginx/html:ro
-      - ./ssl/protopie.key:/etc/nginx/ssl/protopie.key:ro  # 로컬 파일 경로 : docker 컨테이너 파일 경로
-      - ./ssl/protopie.crt:/etc/nginx/ssl/protopie.crt:ro  # 로컬 파일 경로 : docker 컨테이너 파일 경로
+      - ./ssl/protopie.key:/etc/nginx/ssl/protopie.key:ro # 로컬 파일 경로 : docker 컨테이너 파일 경로
+      - ./ssl/protopie.crt:/etc/nginx/ssl/protopie.crt:ro # 로컬 파일 경로 : docker 컨테이너 파일 경로
     ports:
-      - 443:443  # 로컬 포트 : docker 컨테이너 포트
+      - 443:443 # 로컬 포트 : docker 컨테이너 포트
     links:
       - web
       - api
@@ -162,7 +173,7 @@ services:
 
 ```yaml
 servers:
-  http: https://protopie.your.domain  
+  http: https://protopie.your.domain
   update: https://autoupdate.protopie.io
 ```
 
@@ -182,7 +193,7 @@ docker hub에서 이러한 docker 이미지를 가져오려면 `docker login`을
 
 이 Docker 이미지는 linux 기반입니다. 따라서 Windows를 사용하는 경우, `Docker for Windows`를 사용하여 Windows에서 linux 컨테이너를 실행하는 것을 권장합니다. 자세한 내용은 아래 링크를 참조하세요.
 
-* https://docs.docker.com/docker-for-windows
+- https://docs.docker.com/docker-for-windows
 
 ### macOS의 경우
 
@@ -191,53 +202,63 @@ macOS를 사용하는 경우, HomeBrew를 사용하고 다음 명령어를 통�
 ```bash
 brew install docker docker-compose colima
 ```
+
 ## 자주 사용하는 관리 명령어
+
 배포가 완료되면 Docker 컨테이너를 관리하고 확인하는 데 필요한 다음 명령어들을 사용할 수 있습니다. `docker-compose` 명령어는 `docker-compose.yml` 파일이 있는 폴더에서 실행해야 합니다.
 
 ```bash
 docker ps
 ```
+
 현재 실행 중인 Docker 컨테이너 목록을 나열합니다. ProtoPie Enterprise는 Docker Compose의 네 가지 서비스로 구성된 Docker 이미지로 구성됩니다.
 
-* `nginx` - 웹 서버
-* `web` - 웹 애플리케이션 인터페이스
-* `api` - 백엔드 API
-* `db` - 데이터베이스 서버
+- `nginx` - 웹 서버
+- `web` - 웹 애플리케이션 인터페이스
+- `api` - 백엔드 API
+- `db` - 데이터베이스 서버
 
 ```bash
 docker-compose -p protopie restart
 ```
+
 `protopie` 프로젝트에 정의된 모든 서비스 컨테이너를 재시작합니다.
 
 ```bash
 docker-compose -p protopie stop
 ```
+
 `protopie` 프로젝트에 정의된 모든 서비스 컨테이너를 중지합니다.
 
 ```bash
 docker-compose -p protopie down
 ```
+
 `protopie` 프로젝트에 정의된 모든 서비스, 네트워크 및 캐시 볼륨을 중지하고 제거합니다.
 참고: 컨테이너가 중지되거나 제거되더라도 `db` 데이터는 유지됩니다. 왜냐하면 `db`는 호스트 파일 시스템에 마운트되었기 때문입니다.
 
 ```bash
 docker-compose -p protopie logs
 ```
+
 `protopie` 프로젝트에 정의된 모든 서비스의 로그를 표시합니다.
 
 ```bash
 docker network ls
 ```
+
 모든 Docker 네트워크를 나열합니다.
 
 ```bash
 docker volume ls
 ```
+
 모든 Docker 볼륨을 나열합니다.
 
 ```bash
 docker volume rm protopie_api_logs protopie_api_upload protopie_api_download protopie_pg_data
 ```
+
 모든 Docker 볼륨을 삭제합니다. !!!위험 주의: 이 명령어는 모든 데이터를 삭제합니다. 데이터를 백업하고 삭제해야 할 경우에만 실행하세요!!!
 
 ## 주의 사항
@@ -246,64 +267,75 @@ docker volume rm protopie_api_logs protopie_api_upload protopie_api_download pro
 
 업로드된 파이와 데이터베이스 데이터는 가장 많은 디스크 공간을 사용합니다. 사용 가능한 디스크 공간을 확인하고 백업을 생성하여 예기치 않은 문제를 방지해야 합니다. 백업을 생성하려면 다음 Docker 볼륨을 확인하고 복사할 내용을 파악하세요.
 
-* `api_upload`: 파이가 업로드되는 위치.
+- `api_upload`: 파이가 업로드되는 위치.
+
 ```bash
 docker cp protopie_api_1:/app/upload [[백업 경로]]
 ```
 
-* `pg_data`: 데이터베이스 데이터가 저장되는 위치.
+- `pg_data`: 데이터베이스 데이터가 저장되는 위치.
+
 ```bash
 docker exec protopie_db_1 pg_dump -c -U postgres protopie > [[백업 경로]]/protopie_db_`date +%y%m%d%H%M%S`.sql
 ```
 
 #### Pie 파일 및 데이터베이스 복원
 
-* `api_upload`: 업로드된 데이터 복원.
+- `api_upload`: 업로드된 데이터 복원.
+
 ```bash
 docker cp [[백업 경로]] protopie_api_1:/app/
 
 예: docker cp ./upload protopie_api_1:/app/
 ```
 
-* `pg_data`: 데이터베이스 데이터 복원.
+- `pg_data`: 데이터베이스 데이터 복원.
+
 ```bash
 cat [[백업 경로]]/protopie_db_xxx.sql |  docker exec -i protopie_db_1 psql -U postgres protopie
 ```
 
 ## 업그레이드 및 다운그레이드
+
 업데이트 및 다운그레이드 전에 데이터 안전을 보장하기 위해 서버의 스냅샷 이미지를 생성하고 위의 방법으로 데이터를 백업하여 안전한 위치에 보관하는 것이 좋습니다.
 
 #### 버전 업데이트
 
 1. `docker-compose.yml` 파일이 포함된 디렉토리로 이동합니다: (예: cd /home/victor/enterprise-onpremises)
-(Windows의 경우, Windows 탐색기에서 `docker-compose.yml` 파일이 포함된 디렉토리로 이동합니다(예: c:\local\lib\protopie))
+   (Windows의 경우, Windows 탐색기에서 `docker-compose.yml` 파일이 포함된 디렉토리로 이동합니다(예: c:\local\lib\protopie))
 
 2. 텍스트 편집기로 `docker-compose.yml` 파일을 엽니다:
+
 ```bash
 sudo vi docker-compose.yml
 ```
 
 3. 다음 부분을 찾아 수정하고 저장합니다:
+
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-13.1.3
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-14.2.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-13.1.3
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-14.2.0
 ```
 
 4. 실행 중인 ProtoPie 서비스를 중지합니다:
+
 ```bash
 docker-compose -p protopie stop
 ```
+
 (Windows의 경우: Win + r 단축키 => 실행 창에 "cmd"를 입력하고 열기, `cd` 명령어로 protopie 파일 경로로 이동합니다(예: cd c:\local\lib\protopie))
 
 5. 중지된 서비스 컨테이너를 제거합니다:
+
 ```bash
 docker-compose -p protopie rm
 ```
 
 6. 업데이트된 ProtoPie 서비스를 백그라운드 모드로 시작합니다:
+
 ```bash
 docker-compose -p protopie up -d
 ```
@@ -314,8 +346,8 @@ docker-compose -p protopie up -d
 
 `api`의 경우 ProtoPie Enterprise는 버전 다운그레이드를 잘 지원하지 않을 수 있습니다. 주요 또는 부차적 버전 업데이트에는 데이터베이스 스키마 변경이 포함될 수 있으며, `api`는 시작 시 이를 검사하고 데이터베이스 스키마 변경이 포함된 경우 데이터베이스 마이그레이션을 시도합니다. 따라서 버전 다운그레이드 시 마이그레이션된 데이터베이스 스키마로 인해 `api`가 오류를 발생시킬 수 있습니다.
 
-* enterprise-web-1.0.2 / enterprise-api-1.0.8 (O)
-* enterprise-web-1.0.2 / enterprise-api-1.1.2 (X)
+- enterprise-web-1.0.2 / enterprise-api-1.0.8 (O)
+- enterprise-web-1.0.2 / enterprise-api-1.1.2 (X)
 
 #### 버전 불일치
 
@@ -336,11 +368,13 @@ notepad++에서는:
 편집 > EOL 변환 > UNIX/OSX 형식으로 설정합니다.
 
 여분의 CR 문자를 제거하려면 다음 명령어를 사용할 수 있습니다:
+
 ```bash
 sed -i -e 's/\r$//' setup.sh
 ```
 
 vi로 스크립트를 편집하는 경우:
+
 ```bash
 vi run.sh
 :set fileformat=unix
@@ -355,3 +389,30 @@ vi run.sh
 일부 고객의 서버에서 80번 포트가 다른 애플리케이션에 의해 사용 중인 경우가 있습니다. 따라서 ProtoPie 로컬 서비스가 사용할 포트를 변경하는 것이 좋습니다. `docker-compose.yml` 파일을 수정하여 `services.nginx.ports` 항목을 `80:80`에서 `8080:80`으로 조정하고, `config.yml` 파일의 `servers.http` 항목을 `http://192.168.xxx.xxx`에서 `http://192.168.xxx.xxx:8080`으로 변경합니다. 이 단계를 완료한 후 업데이트된 URL 및 포트 정보를 제공해 주시면 해당 포트로 새 인증서를 제공해 드리겠습니다. 이후 기존 인증서를 교체해야 합니다.
 
 참고: 80번 포트는 HTTP의 기본 포트이므로 웹 브라우저에서 일반적으로 표시되지 않습니다. 그러나 서비스 포트를 8080으로 변경한 경우 URL에 새 포트를 명시해야 합니다. 예를 들어, 원래 `http://192.168.xxx.xxx`에서 서비스를 사용했다면 이제는 `http://192.168.xxx.xxx:8080`으로 변경해야 합니다.
+
+#### 인터넷 연결이 없는 서버에 Docker 이미지 배포
+
+배포 중에는 서버가 Docker 이미지를 가져오기 위해 인터넷 연결이 필요합니다. 배포가 완료된 후에는 필요에 따라 조직의 보안 정책에 따라 인터넷 연결을 해제할 수 있습니다. 인터넷에 연결되지 않은 서버에 배포해야 하는 경우, 인터넷에 연결된 컴퓨터에서 아래 Docker 명령을 사용하여 이미지를 가져오고 저장할 수 있습니다:
+
+```bash
+docker pull nginx:1.21.1-alpine
+docker pull protopie/enterprise-onpremises:web-14.2.0
+docker pull protopie/enterprise-onpremises:api-14.2.0
+docker pull postgres:10.5-alpine
+
+docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
+docker save -o web_latest.tar protopie/enterprise-onpremises:web-14.2.0
+docker save -o api_latest.tar protopie/enterprise-onpremises:api-14.2.0
+docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
+```
+
+**참고:** `14.2.0`을 필요한 최신 버전으로 교체하십시오.
+
+그런 다음 안전한 방법(USB 또는 내부 네트워크)을 통해 저장된 파일을 대상 서버로 전송하고, 대상 서버에서 다음 명령을 실행하여 전송된 이미지를 로드합니다:
+
+```bash
+docker load -i nginx_1.21.1-alpine.tar
+docker load -i web_latest.tar
+docker load -i api_latest.tar
+docker load -i postgres_10.5-alpine.tar
+```
