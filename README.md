@@ -1,4 +1,4 @@
-_[English](README.md) ∙ [简体中文](docs/README.zh-Hans.md) ∙ [日本語](docs/README.ja.md) ∙ [한국인](docs/README.ko.md)_
+_[English](README.md) ∙ [简体中文](docs/README.zh-Hans.md) ∙ [日本語](docs/README.ja.md) ∙ [한국어](docs/README.ko.md)_
 
 # Deploying ProtoPie Enterprise on an On-Premises Server
 
