@@ -1,4 +1,4 @@
-_[English](../README.md) ∙ [简体中文](README.zh-Hans.md) ∙ [日本語](README.ja.md) ∙ [한국인](README.ko.md)_
+_[English](../README.md) ∙ [简体中文](README.zh-Hans.md) ∙ [日本語](README.ja.md) ∙ [한국어](README.ko.md)_
 
 # 로컬 서버에서 ProtoPie Enterprise 배포
 
