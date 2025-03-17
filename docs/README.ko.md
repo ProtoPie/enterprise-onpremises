@@ -314,10 +314,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.2.0
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.3.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.2.0
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.3.0
 ```
 
 4. 실행 중인 ProtoPie 서비스를 중지합니다:
@@ -396,17 +396,17 @@ vi run.sh
 
 ```bash
 docker pull nginx:1.21.1-alpine
-docker pull protopie/enterprise-onpremises:web-15.2.0
-docker pull protopie/enterprise-onpremises:api-15.2.0
+docker pull protopie/enterprise-onpremises:web-15.3.0
+docker pull protopie/enterprise-onpremises:api-15.3.0
 docker pull postgres:10.5-alpine
 
 docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
-docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.2.0
-docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.2.0
+docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.3.0
+docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.3.0
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 ```
 
-**참고:** `15.2.0`을 필요한 최신 버전으로 교체하십시오.
+**참고:** `15.3.0`을 필요한 최신 버전으로 교체하십시오.
 
 그런 다음 안전한 방법(USB 또는 내부 네트워크)을 통해 저장된 파일을 대상 서버로 전송하고, 대상 서버에서 다음 명령을 실행하여 전송된 이미지를 로드합니다:
 
