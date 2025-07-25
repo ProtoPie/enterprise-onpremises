@@ -20,7 +20,7 @@ services:
     restart: always
 
   api:
-    image: protopie/enterprise-onpremises:api-15.6.2
+    image: protopie/enterprise-onpremises:api-15.6.3
     hostname: ppeop_api
     env_file:
       - api.env

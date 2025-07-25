@@ -317,7 +317,7 @@ web:
 image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.6.4
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.6.2
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.6.3
 ```
 
 4. 실행 중인 ProtoPie 서비스를 중지합니다:
@@ -397,12 +397,12 @@ vi run.sh
 ```bash
 docker pull nginx:1.21.1-alpine
 docker pull protopie/enterprise-onpremises:web-15.6.4
-docker pull protopie/enterprise-onpremises:api-15.6.2
+docker pull protopie/enterprise-onpremises:api-15.6.3
 docker pull postgres:10.5-alpine
 
 docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
 docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.6.4
-docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.6.2
+docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.6.3
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 ```
 
