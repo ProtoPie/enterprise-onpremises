@@ -300,10 +300,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.6.4
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.7.0
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.6.3
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.7.1
 
 ```
 
@@ -385,13 +385,13 @@ vi run.sh
 
 ```bash
 docker pull nginx:1.21.1-alpine
-docker pull protopie/enterprise-onpremises:web-15.6.4
-docker pull protopie/enterprise-onpremises:api-15.6.3
+docker pull protopie/enterprise-onpremises:web-15.7.0
+docker pull protopie/enterprise-onpremises:api-15.7.1
 docker pull postgres:10.5-alpine
 
 docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
-docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.6.4
-docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.6.3
+docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.7.0
+docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.7.1
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 ```
 
