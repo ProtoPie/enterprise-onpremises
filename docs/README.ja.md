@@ -300,10 +300,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.7.0
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.7.3
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.7.1
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.7.2
 
 ```
 
@@ -385,17 +385,17 @@ vi run.sh
 
 ```bash
 docker pull nginx:1.21.1-alpine
-docker pull protopie/enterprise-onpremises:web-15.7.0
-docker pull protopie/enterprise-onpremises:api-15.7.1
+docker pull protopie/enterprise-onpremises:web-15.7.3
+docker pull protopie/enterprise-onpremises:api-15.7.2
 docker pull postgres:10.5-alpine
 
 docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
-docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.7.0
-docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.7.1
+docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.7.3
+docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.7.2
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 ```
 
-**ヒント：** `15.5.2`は、必要な最新のバージョンに置き換えてください。
+**ヒント：** `15.7.2`は、必要な最新のバージョンに置き換えてください。
 
 その後、安全な方法（USB や内部ネットワークなど）で保存したファイルをターゲットサーバーに転送し、ターゲットサーバーで以下のコマンドを実行して転送したイメージをロードします：
 
