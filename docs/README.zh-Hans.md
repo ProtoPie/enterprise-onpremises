@@ -52,8 +52,8 @@ ProtoPie Enterprise 属于 ProtoPie 生态系统的一部分，是一种为了�
 
 ## 软件要求
 
-- Docker 1.13.0+
-- Docker Compose 1.10.0+
+- 服务器上需要有最新的稳定版本的Docker和Docker Compose
+- 对于没有Docker的服务器系统（比如Debian 13）,可以用Podman和Podman Compose替代
 
 ## 准备工作
 
@@ -135,14 +135,13 @@ openssl x509 -req -days 365 -in protopie.csr -signkey protopie.key -out protopie
 
 ```nginx
 server {
-    listen 443;
+    listen 443 ssl;
     server_name localhost;
-    ssl on;
     ssl_certificate /etc/nginx/ssl/protopie.crt; #docker容器文件路径
     ssl_certificate_key /etc/nginx/ssl/protopie.key; #docker容器文件路径
 
     ssl_session_timeout 5m;
-    ssl_protocols SSLv2 SSLv3 TLSv1;
+    ssl_protocols TLSv1.2 TLSv1.3;
 
     location / {
         proxy_pass http://web_server;

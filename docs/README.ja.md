@@ -52,8 +52,8 @@ ProtoPie Enterprise をサーバーにデプロイする前に、以下のハー
 
 ## ソフトウェア要件
 
-- Docker 1.13.0+
-- Docker Compose 1.10.0+
+- サーバーには、最新の安定版であるDockerとDocker Composeが必要です。
+- Dockerが利用できないサーバーシステム（例：Debian 13）では、代替としてPodmanとPodman Composeを使用できます。
 
 ## 準備
 
@@ -122,14 +122,13 @@ SSL/TLS 証明書がある場合は、以下の設定を`nginx.conf`ファイル
 
 ```nginx
 server {
-    listen 443;
+    listen 443 ssl;
     server_name localhost;
-    ssl on;
     ssl_certificate /etc/nginx/ssl/protopie.crt; #dockerコンテナのファイルパス
     ssl_certificate_key /etc/nginx/ssl/protopie.key; #dockerコンテナのファイルパス
 
     ssl_session_timeout 5m;
-    ssl_protocols SSLv2 SSLv3 TLSv1;
+    ssl_protocols TLSv1.2 TLSv1.3;
 
     location / {
         proxy_pass http://web_server;
