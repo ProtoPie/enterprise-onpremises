@@ -52,8 +52,8 @@ ProtoPie 생태계에 대해 더 알고 싶으시면 다음 링크를 참조하�
 
 ## 소프트웨어 요구 사항
 
-- Docker 1.13.0+
-- Docker Compose 1.10.0+
+- 서버에 최신 안정 버전의 Docker와 Docker Compose가 필요합니다.
+- Docker를 사용할 수 없는 서버 시스템(예: Debian 13)의 경우, 대안으로 Podman과 Podman Compose를 사용할 수 있습니다.
 
 ## 준비 작업
 
@@ -135,14 +135,13 @@ SSL/TLS 인증서가 있는 경우, 다음 설정을 `nginx.conf` 파일에 올�
 
 ```nginx
 server {
-    listen 443;
+    listen 443 ssl;
     server_name localhost;
-    ssl on;
     ssl_certificate /etc/nginx/ssl/protopie.crt; #docker 컨테이너 파일 경로
     ssl_certificate_key /etc/nginx/ssl/protopie.key; #docker 컨테이너 파일 경로
 
     ssl_session_timeout 5m;
-    ssl_protocols SSLv2 SSLv3 TLSv1;
+    ssl_protocols TLSv1.2 TLSv1.3;
 
     location / {
         proxy_pass http://web_server;

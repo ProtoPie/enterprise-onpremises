@@ -52,8 +52,8 @@ If you can perform a fresh installation of the server operating system, it is re
 
 ## Software Requirements
 
-- Docker 1.13.0+
-- Docker Compose 1.10.0+
+- The latest stable versions of Docker and Docker Compose are required on the server.
+- For server systems where Docker is not available (e.g., Debian 13), Podman and Podman Compose can be used as an alternative.
 
 ## Preparatory Work
 
@@ -135,14 +135,13 @@ If you have an SSL/TLS certificate, insert the following configuration into the 
 
 ```nginx
 server {
-    listen 443;
+    listen 443 ssl;
     server_name localhost;
-    ssl on;
     ssl_certificate /etc/nginx/ssl/protopie.crt; # docker container file path
     ssl_certificate_key /etc/nginx/ssl/protopie.key; # docker container file path
 
     ssl_session_timeout 5m;
-    ssl_protocols SSLv2 SSLv3 TLSv1;
+    ssl_protocols TLSv1.2 TLSv1.3;
 
     location / {
         proxy_pass http://web_server;
