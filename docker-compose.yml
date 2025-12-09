@@ -15,12 +15,12 @@ services:
     restart: always
 
   web:
-    image: protopie/enterprise-onpremises:web-15.8.2
+    image: protopie/enterprise-onpremises:web-15.8.7
     hostname: ppeop_web
     restart: always
 
   api:
-    image: protopie/enterprise-onpremises:api-15.8.2
+    image: protopie/enterprise-onpremises:api-15.8.5
     hostname: ppeop_api
     env_file:
       - api.env

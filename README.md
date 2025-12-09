@@ -313,10 +313,10 @@ vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.8.2
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.8.7
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.8.2
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.8.5
 
 ```
 
@@ -398,17 +398,17 @@ During deployment, the server requires internet access to pull Docker images. Af
 
 ```bash
 docker pull nginx:1.21.1-alpine
-docker pull protopie/enterprise-onpremises:web-15.8.2
-docker pull protopie/enterprise-onpremises:api-15.8.2
+docker pull protopie/enterprise-onpremises:web-15.8.7
+docker pull protopie/enterprise-onpremises:api-15.8.5
 docker pull postgres:10.5-alpine
 
 docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
-docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.8.2
-docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.8.2
+docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.8.7
+docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.8.5
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 ```
 
-**Note:** Please replace `15.7.2` with the latest version you need.
+**Note:** Please replace `15.8.x` with the latest version you need.
 
 Then, transfer the saved files to the target server through secure methods (such as USB or internal network), and run the following commands on the target server to load the transferred images:
 
