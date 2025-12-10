@@ -313,10 +313,10 @@ sudo vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.8.2
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-15.8.7
 
 api:
-image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.8.2
+image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-15.8.5
 
 ```
 
@@ -396,17 +396,17 @@ vi run.sh
 
 ```bash
 docker pull nginx:1.21.1-alpine
-docker pull protopie/enterprise-onpremises:web-15.8.2
-docker pull protopie/enterprise-onpremises:api-15.8.2
+docker pull protopie/enterprise-onpremises:web-15.8.7
+docker pull protopie/enterprise-onpremises:api-15.8.5
 docker pull postgres:10.5-alpine
 
 docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
-docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.8.2
-docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.8.2
+docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.8.7
+docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.8.5
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 ```
 
-**提示：** 请将 `15.7.2` 替换为您需要的最新版本号。
+**提示：** 请将 `15.8.x` 替换为您需要的最新版本号。
 
 然后通过安全方式（如 USB、内部网络）将保存的文件传输到目标服务器，在目标服务器上运行以下命令加载传输过来的镜像：
 
