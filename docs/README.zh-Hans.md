@@ -154,7 +154,7 @@ server {
 ```yaml
 services:
   nginx:
-    image: nginx:1.21.1-alpine
+    image: nginx:1.26.3-alpine
     hostname: ppeop_nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
@@ -395,12 +395,12 @@ vi run.sh
 部署过程中，服务器需要访问互联网以拉取 Docker 镜像。部署完成后，若有需要，您可以根据组织的安全策略断开互联网连接。如果您的组织确实需要在没有互联网访问的服务器上部署，您需要从一台有互联网访问的电脑上通过下面的 docker 命令拉取并保存 docker 镜像：
 
 ```bash
-docker pull nginx:1.21.1-alpine
+docker pull nginx:1.26.3-alpine
 docker pull protopie/enterprise-onpremises:web-15.8.7
 docker pull protopie/enterprise-onpremises:api-15.8.5
 docker pull postgres:10.5-alpine
 
-docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
+docker save -o nginx_1.26.3-alpine.tar nginx:1.26.3-alpine
 docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.8.7
 docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.8.5
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
@@ -411,7 +411,7 @@ docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 然后通过安全方式（如 USB、内部网络）将保存的文件传输到目标服务器，在目标服务器上运行以下命令加载传输过来的镜像：
 
 ```bash
-docker load -i nginx_1.21.1-alpine.tar
+docker load -i nginx_1.26.3-alpine.tar
 docker load -i web_latest.tar
 docker load -i api_latest.tar
 docker load -i postgres_10.5-alpine.tar

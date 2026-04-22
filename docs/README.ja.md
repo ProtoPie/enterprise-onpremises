@@ -141,7 +141,7 @@ server {
 ```yaml
 services:
   nginx:
-    image: nginx:1.21.1-alpine
+    image: nginx:1.26.3-alpine
     hostname: ppeop_nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
@@ -383,12 +383,12 @@ vi run.sh
 デプロイ中、サーバーは Docker イメージを取得するためにインターネット接続が必要です。デプロイが完了した後、必要に応じて組織のセキュリティポリシーに従ってインターネット接続を切断することができます。もし、インターネットに接続できないサーバーにデプロイする必要がある場合、インターネット接続のあるコンピューターから以下の docker コマンドを使って Docker イメージを取得し、保存する必要があります。
 
 ```bash
-docker pull nginx:1.21.1-alpine
+docker pull nginx:1.26.3-alpine
 docker pull protopie/enterprise-onpremises:web-15.8.7
 docker pull protopie/enterprise-onpremises:api-15.8.5
 docker pull postgres:10.5-alpine
 
-docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
+docker save -o nginx_1.26.3-alpine.tar nginx:1.26.3-alpine
 docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.8.7
 docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.8.5
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
@@ -399,7 +399,7 @@ docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 その後、安全な方法（USB や内部ネットワークなど）で保存したファイルをターゲットサーバーに転送し、ターゲットサーバーで以下のコマンドを実行して転送したイメージをロードします：
 
 ```bash
-docker load -i nginx_1.21.1-alpine.tar
+docker load -i nginx_1.26.3-alpine.tar
 docker load -i web_latest.tar
 docker load -i api_latest.tar
 docker load -i postgres_10.5-alpine.tar

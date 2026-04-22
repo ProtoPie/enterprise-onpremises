@@ -154,7 +154,7 @@ server {
 ```yaml
 services:
   nginx:
-    image: nginx:1.21.1-alpine
+    image: nginx:1.26.3-alpine
     hostname: ppeop_nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
@@ -394,12 +394,12 @@ vi run.sh
 배포 중에는 서버가 Docker 이미지를 가져오기 위해 인터넷 연결이 필요합니다. 배포가 완료된 후에는 필요에 따라 조직의 보안 정책에 따라 인터넷 연결을 해제할 수 있습니다. 인터넷에 연결되지 않은 서버에 배포해야 하는 경우, 인터넷에 연결된 컴퓨터에서 아래 Docker 명령을 사용하여 이미지를 가져오고 저장할 수 있습니다:
 
 ```bash
-docker pull nginx:1.21.1-alpine
+docker pull nginx:1.26.3-alpine
 docker pull protopie/enterprise-onpremises:web-15.8.7
 docker pull protopie/enterprise-onpremises:api-15.8.5
 docker pull postgres:10.5-alpine
 
-docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
+docker save -o nginx_1.26.3-alpine.tar nginx:1.26.3-alpine
 docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.8.7
 docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.8.5
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
@@ -410,7 +410,7 @@ docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 그런 다음 안전한 방법(USB 또는 내부 네트워크)을 통해 저장된 파일을 대상 서버로 전송하고, 대상 서버에서 다음 명령을 실행하여 전송된 이미지를 로드합니다:
 
 ```bash
-docker load -i nginx_1.21.1-alpine.tar
+docker load -i nginx_1.26.3-alpine.tar
 docker load -i web_latest.tar
 docker load -i api_latest.tar
 docker load -i postgres_10.5-alpine.tar

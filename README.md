@@ -154,7 +154,7 @@ Modify the `docker-compose.yml` file as follows:
 ```yaml
 services:
   nginx:
-    image: nginx:1.21.1-alpine
+    image: nginx:1.26.3-alpine
     hostname: ppeop_nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
@@ -397,12 +397,12 @@ Note that since port 80 is the default port for HTTP, web browsers typically do 
 During deployment, the server requires internet access to pull Docker images. After deployment, you may disconnect the internet connection according to your organization's security policy if needed. If your organization requires deployment on a server without internet access, you can pull and save the Docker images from a computer with internet access using the following Docker commands:
 
 ```bash
-docker pull nginx:1.21.1-alpine
+docker pull nginx:1.26.3-alpine
 docker pull protopie/enterprise-onpremises:web-15.8.7
 docker pull protopie/enterprise-onpremises:api-15.8.5
 docker pull postgres:10.5-alpine
 
-docker save -o nginx_1.21.1-alpine.tar nginx:1.21.1-alpine
+docker save -o nginx_1.26.3-alpine.tar nginx:1.26.3-alpine
 docker save -o web_latest.tar protopie/enterprise-onpremises:web-15.8.7
 docker save -o api_latest.tar protopie/enterprise-onpremises:api-15.8.5
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
@@ -413,7 +413,7 @@ docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 Then, transfer the saved files to the target server through secure methods (such as USB or internal network), and run the following commands on the target server to load the transferred images:
 
 ```bash
-docker load -i nginx_1.21.1-alpine.tar
+docker load -i nginx_1.26.3-alpine.tar
 docker load -i web_latest.tar
 docker load -i api_latest.tar
 docker load -i postgres_10.5-alpine.tar
