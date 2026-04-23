@@ -418,3 +418,21 @@ docker load -i web_latest.tar
 docker load -i api_latest.tar
 docker load -i postgres_10.5-alpine.tar
 ```
+
+### Automatic Updates
+
+If your server has internet access to Docker Hub, you can use the provided `auto_update.sh` script to automate the process of checking for new versions, updating the configuration, and restarting the containers.
+
+1.  **Configure Cron Job**:
+    Open your crontab editor:
+    ```bash
+    crontab -e
+    ```
+
+2.  **Add the Schedule**:
+    Add the following line to run the update on the 1st of every month at 2:00 AM (replace `/path/to/project` with your actual project path):
+    ```cron
+    0 2 1 * * /path/to/project/auto_update.sh >> /path/to/project/update.log 2>&1
+    ```
+
+The script will automatically update `docker-compose.yml` and all README files with the latest versions found on Docker Hub before restarting the services.

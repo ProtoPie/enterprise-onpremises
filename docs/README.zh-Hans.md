@@ -416,3 +416,21 @@ docker load -i web_latest.tar
 docker load -i api_latest.tar
 docker load -i postgres_10.5-alpine.tar
 ```
+
+### 自动更新
+
+如果您的服务器可以访问Docker Hub，您可以使用提供的 `auto_update.sh` 脚本来自动检查新版本、更新配置并重启容器。
+
+1.  **配置 Cron 任务**:
+    打开 crontab 编辑器：
+    ```bash
+    crontab -e
+    ```
+
+2.  **添加定时计划**:
+    添加以下行以在每月 1 号凌晨 2:00 运行更新（请将 `/path/to/project` 替换为您实际的项目路径）：
+    ```cron
+    0 2 1 * * /path/to/project/auto_update.sh >> /path/to/project/update.log 2>&1
+    ```
+
+该脚本在重启服务之前，会自动将 `docker-compose.yml` 和所有 README 文件更新为在 Docker Hub 上找到的最新版本。
