@@ -1,4 +1,4 @@
-name: Auto Update and Release Images
+name: Auto Update and Release Multi-Arch Images
 
 on:
   schedule:
@@ -55,20 +55,36 @@ jobs:
           echo "pg=$PG_VER" >> $GITHUB_OUTPUT
           echo "tag=web-$WEB_VER-api-$API_VER" >> $GITHUB_OUTPUT
 
-      - name: Pull and Save Docker Images
+      - name: Pull and Save Docker Images (Multi-Arch)
         if: steps.git-check.outputs.changes == 'true'
         run: |
-          echo "Pulling images..."
-          docker pull protopie/enterprise-onpremises:web-${{ steps.v.outputs.web }}
-          docker pull protopie/enterprise-onpremises:api-${{ steps.v.outputs.api }}
-          docker pull nginx:${{ steps.v.outputs.nginx }}
-          docker pull postgres:${{ steps.v.outputs.pg }}
+          platforms=("linux/amd64" "linux/arm64")
+          archs=("amd64" "arm64")
           
-          echo "Saving images to tarballs with versions..."
-          docker save protopie/enterprise-onpremises:web-${{ steps.v.outputs.web }} | gzip > web-${{ steps.v.outputs.web }}.tar.gz
-          docker save protopie/enterprise-onpremises:api-${{ steps.v.outputs.api }} | gzip > api-${{ steps.v.outputs.api }}.tar.gz
-          docker save nginx:${{ steps.v.outputs.nginx }} | gzip > nginx-${{ steps.v.outputs.nginx }}.tar.gz
-          docker save postgres:${{ steps.v.outputs.pg }} | gzip > postgres-${{ steps.v.outputs.pg }}.tar.gz
+          for i in "${!platforms[@]}"; do
+            platform=${platforms[$i]}
+            arch=${archs[$i]}
+            
+            echo "Processing platform: $platform ($arch)"
+            
+            # Pull with specific platform
+            docker pull --platform $platform protopie/enterprise-onpremises:web-${{ steps.v.outputs.web }}
+            docker pull --platform $platform protopie/enterprise-onpremises:api-${{ steps.v.outputs.api }}
+            docker pull --platform $platform nginx:${{ steps.v.outputs.nginx }}
+            docker pull --platform $platform postgres:${{ steps.v.outputs.pg }}
+            
+            # Save and Compress with arch suffix
+            docker save protopie/enterprise-onpremises:web-${{ steps.v.outputs.web }} | gzip > web-${{ steps.v.outputs.web }}-$arch.tar.gz
+            docker save protopie/enterprise-onpremises:api-${{ steps.v.outputs.api }} | gzip > api-${{ steps.v.outputs.api }}-$arch.tar.gz
+            docker save nginx:${{ steps.v.outputs.nginx }} | gzip > nginx-${{ steps.v.outputs.nginx }}-$arch.tar.gz
+            docker save postgres:${{ steps.v.outputs.pg }} | gzip > postgres-${{ steps.v.outputs.pg }}-$arch.tar.gz
+            
+            # Remove images to avoid mixing tags for next platform pull
+            docker rmi protopie/enterprise-onpremises:web-${{ steps.v.outputs.web }}
+            docker rmi protopie/enterprise-onpremises:api-${{ steps.v.outputs.api }}
+            docker rmi nginx:${{ steps.v.outputs.nginx }}
+            docker rmi postgres:${{ steps.v.outputs.pg }}
+          done
 
       - name: Create Release
         if: steps.git-check.outputs.changes == 'true'
@@ -76,18 +92,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create ${{ steps.v.outputs.tag }} \
-            web-${{ steps.v.outputs.web }}.tar.gz \
-            api-${{ steps.v.outputs.api }}.tar.gz \
-            nginx-${{ steps.v.outputs.nginx }}.tar.gz \
-            postgres-${{ steps.v.outputs.pg }}.tar.gz \
+            *.tar.gz \
             --title "Release: Web ${{ steps.v.outputs.web }} / API ${{ steps.v.outputs.api }}" \
             --notes "Automated release for ProtoPie Enterprise On-Premises.
             
-            ### Docker Images (Compressed Tarballs)
-            - **Web**: `protopie/enterprise-onpremises:web-${{ steps.v.outputs.web }}`
-            - **API**: `protopie/enterprise-onpremises:api-${{ steps.v.outputs.api }}`
-            - **Nginx**: `nginx:${{ steps.v.outputs.nginx }}`
-            - **Postgres**: `postgres:${{ steps.v.outputs.pg }}`
+            ### Docker Images (Multi-Arch Support)
+            Available for both **linux/amd64** (Intel/AMD) and **linux/arm64** (Apple Silicon/AWS Graviton/etc).
             
             **How to use:**
-            If your server can not directly download these docker images. You can download the files and run \`docker load -i <filename>\` on your server."
+            If your server can not directly download these docker images. You can download from here.
+            1. Download the file corresponding to your server architecture.
+            2. Run \`docker load -i <filename>\` on your server."
