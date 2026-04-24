@@ -1,18 +1,16 @@
-name: Auto Update Docker Images
+name: Auto Update and Release Images
 
 on:
   schedule:
-    # Run everyday 0:00 (UTC) 
     - cron: '0 0 * * *'
   workflow_dispatch:
 
-
 jobs:
-  update-versions:
+  update-and-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,9 +21,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests
+        run: pip install requests
 
       - name: Run update script
         run: python update_version.py
@@ -41,5 +37,57 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "chore: auto-update docker image versions to latest"
+          git commit -m "chore: auto-update docker image versions"
           git push
+
+      - name: Extract versions
+        if: steps.git-check.outputs.changes == 'true'
+        id: v
+        run: |
+          WEB_VER=$(grep 'image: protopie/enterprise-onpremises:web-' docker-compose.yml | awk -F':web-' '{print $2}' | xargs)
+          API_VER=$(grep 'image: protopie/enterprise-onpremises:api-' docker-compose.yml | awk -F':api-' '{print $2}' | xargs)
+          NGINX_VER=$(grep 'image: nginx:' docker-compose.yml | awk -F'nginx:' '{print $2}' | xargs)
+          PG_VER=$(grep 'image: postgres:' docker-compose.yml | awk -F'postgres:' '{print $2}' | xargs)
+          
+          echo "web=$WEB_VER" >> $GITHUB_OUTPUT
+          echo "api=$API_VER" >> $GITHUB_OUTPUT
+          echo "nginx=$NGINX_VER" >> $GITHUB_OUTPUT
+          echo "pg=$PG_VER" >> $GITHUB_OUTPUT
+          echo "tag=web-$WEB_VER-api-$API_VER" >> $GITHUB_OUTPUT
+
+      - name: Pull and Save Docker Images
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          echo "Pulling images..."
+          docker pull protopie/enterprise-onpremises:web-${{ steps.v.outputs.web }}
+          docker pull protopie/enterprise-onpremises:api-${{ steps.v.outputs.api }}
+          docker pull nginx:${{ steps.v.outputs.nginx }}
+          docker pull postgres:${{ steps.v.outputs.pg }}
+          
+          echo "Saving images to tarballs with versions..."
+          docker save protopie/enterprise-onpremises:web-${{ steps.v.outputs.web }} | gzip > web-${{ steps.v.outputs.web }}.tar.gz
+          docker save protopie/enterprise-onpremises:api-${{ steps.v.outputs.api }} | gzip > api-${{ steps.v.outputs.api }}.tar.gz
+          docker save nginx:${{ steps.v.outputs.nginx }} | gzip > nginx-${{ steps.v.outputs.nginx }}.tar.gz
+          docker save postgres:${{ steps.v.outputs.pg }} | gzip > postgres-${{ steps.v.outputs.pg }}.tar.gz
+
+      - name: Create Release
+        if: steps.git-check.outputs.changes == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ steps.v.outputs.tag }} \
+            web-${{ steps.v.outputs.web }}.tar.gz \
+            api-${{ steps.v.outputs.api }}.tar.gz \
+            nginx-${{ steps.v.outputs.nginx }}.tar.gz \
+            postgres-${{ steps.v.outputs.pg }}.tar.gz \
+            --title "Release: Web ${{ steps.v.outputs.web }} / API ${{ steps.v.outputs.api }}" \
+            --notes "Automated release for ProtoPie Enterprise On-Premises.
+            
+            ### Docker Images (Compressed Tarballs)
+            - **Web**: `protopie/enterprise-onpremises:web-${{ steps.v.outputs.web }}`
+            - **API**: `protopie/enterprise-onpremises:api-${{ steps.v.outputs.api }}`
+            - **Nginx**: `nginx:${{ steps.v.outputs.nginx }}`
+            - **Postgres**: `postgres:${{ steps.v.outputs.pg }}`
+            
+            **How to use:**
+            If your server can not directly download these docker images. You can download the files and run \`docker load -i <filename>\` on your server."
