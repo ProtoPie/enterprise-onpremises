@@ -15,7 +15,7 @@ services:
     restart: always
 
   web:
-    image: protopie/enterprise-onpremises:web-16.1.2
+    image: protopie/enterprise-onpremises:web-16.1.3
     hostname: ppeop_web
     restart: always
 
