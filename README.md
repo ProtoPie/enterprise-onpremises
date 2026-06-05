@@ -313,7 +313,7 @@ vi docker-compose.yml
 
 ```
 web:
-image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-16.1.3
+image: protopie/enterprise-onpremises:web-9.20.0 => image: protopie/enterprise-onpremises:web-16.1.4
 
 api:
 image: protopie/enterprise-onpremises:api-9.20.0 => image: protopie/enterprise-onpremises:api-16.1.3
@@ -398,12 +398,12 @@ During deployment, the server requires internet access to pull Docker images. Af
 
 ```bash
 docker pull nginx:1.26.3-alpine
-docker pull protopie/enterprise-onpremises:web-16.1.3
+docker pull protopie/enterprise-onpremises:web-16.1.4
 docker pull protopie/enterprise-onpremises:api-16.1.3
 docker pull postgres:10.5-alpine
 
 docker save -o nginx_1.26.3-alpine.tar nginx:1.26.3-alpine
-docker save -o web_latest.tar protopie/enterprise-onpremises:web-16.1.3
+docker save -o web_latest.tar protopie/enterprise-onpremises:web-16.1.4
 docker save -o api_latest.tar protopie/enterprise-onpremises:api-16.1.3
 docker save -o postgres_10.5-alpine.tar postgres:10.5-alpine
 ```
