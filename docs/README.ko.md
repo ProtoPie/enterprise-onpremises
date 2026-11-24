@@ -2,6 +2,35 @@ _[English](../README.md) ∙ [简体中文](README.zh-Hans.md) ∙ [日本語](R
 
 # 로컬 서버에서 ProtoPie Enterprise 배포
 
+## ⚠️ 보안 공지: CVE-2026-114938 (Java4Shell) 임시 우회 조치
+
+**API 15.0.0 – 16.6.0 버전에 해당합니다.** 패치된 API 이미지를 준비하고 있습니다. 릴리스 전까지 아래 우회 조치를 적용하는 것을 권장합니다. API 버전은 `docker-compose.yml` 파일의 `api` 이미지 태그에서 확인할 수 있습니다.
+
+1. `api.env` 파일에 아래 한 줄을 추가합니다. 이미 `JAVA_TOOL_OPTIONS`를 설정해 두었다면 기존 값 뒤에 공백으로 구분해 옵션을 추가합니다.
+
+```
+JAVA_TOOL_OPTIONS=-XX:-UseBASE64Intrinsics
+```
+
+2. API 컨테이너를 다시 생성합니다. `docker-compose.yml` 파일이 있는 디렉토리에서 실행합니다.
+
+```bash
+docker-compose -p protopie up -d
+```
+
+`docker-compose restart`로는 `api.env`가 다시 반영되지 않으므로 `up -d`를 사용하십시오. `-p protopie`를 반드시 포함하십시오. 데이터는 볼륨에 저장되어 있어 영향을 받지 않습니다.
+
+3. 옵션이 적용되었는지 확인합니다. API 로그에 `Picked up JAVA_TOOL_OPTIONS: -XX:-UseBASE64Intrinsics` 줄이 있어야 합니다.
+
+```bash
+docker-compose -p protopie logs api
+```
+
+참고 사항:
+
+- **API 14.x 이하 버전에는 적용하지 마십시오.** 해당 버전은 Java 8에서 실행되며, Java 8은 이 옵션을 인식하지 못해 API가 시작되지 않습니다. 이 버전들은 이번 취약점의 영향을 받지 않으므로 우회 조치가 필요하지 않습니다.
+- 이 우회 조치는 CVE-2026-114938만 완화합니다. 패치된 API 이미지가 릴리스되면 업그레이드하십시오.
+
 이것은 Docker Compose를 사용하여 로컬 서버에서 ProtoPie Enterprise를 배포하는 공식 가이드입니다.
 
 ProtoPie Enterprise는 팀 협업을 용이하게 하기 위해 ProtoPie 생태계의 일부입니다. ProtoPie 생태계의 클라우드 환경에는 다음이 포함됩니다:

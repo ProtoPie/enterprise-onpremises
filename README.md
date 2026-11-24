@@ -2,6 +2,35 @@ _[English](README.md) ∙ [简体中文](docs/README.zh-Hans.md) ∙ [日本語]
 
 # Deploying ProtoPie Enterprise on an On-Premises Server
 
+## ⚠️ Security Notice: Temporary Workaround for CVE-2026-114938 (Java4Shell)
+
+**This applies to API versions 15.0.0 – 16.6.0.** A patched API image is being prepared. Until it is released, we recommend applying the workaround below. You can check your API version in the `api` image tag in the `docker-compose.yml` file.
+
+1. Add the following line to the `api.env` file. If `JAVA_TOOL_OPTIONS` is already set, add the option to the existing value, separated by a space.
+
+```
+JAVA_TOOL_OPTIONS=-XX:-UseBASE64Intrinsics
+```
+
+2. Recreate the API container. Run this in the directory where the `docker-compose.yml` file is located.
+
+```bash
+docker-compose -p protopie up -d
+```
+
+`docker-compose restart` does not reload `api.env`, so please use `up -d`. Always include `-p protopie`. Your data is stored in volumes and is not affected.
+
+3. Check that the option is applied. The API log should contain the line `Picked up JAVA_TOOL_OPTIONS: -XX:-UseBASE64Intrinsics`.
+
+```bash
+docker-compose -p protopie logs api
+```
+
+Please note:
+
+- **Do not apply this to API 14.x or earlier.** Those versions run on Java 8, which does not recognize this option, so the API will fail to start. They are not affected by this vulnerability and do not need the workaround.
+- This workaround only mitigates CVE-2026-114938. Please upgrade to the patched API image once it is released.
+
 This is the official guide for deploying ProtoPie Enterprise using Docker Compose on your on-premises servers.
 
 ProtoPie Enterprise is part of the ProtoPie ecosystem and is a cloud environment designed for team collaboration. The cloud environments within the ProtoPie ecosystem include:

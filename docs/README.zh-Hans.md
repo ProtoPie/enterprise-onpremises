@@ -2,6 +2,35 @@ _[English](../README.md) ∙ [简体中文](README.zh-Hans.md) ∙ [日本語](R
 
 # 在本地服务器上部署 ProtoPie Enterprise
 
+## ⚠️ 安全公告：CVE-2026-114938 (Java4Shell) 临时缓解措施
+
+**适用于 API 15.0.0 – 16.6.0 版本。** 已修复的 API 镜像正在准备中。在发布之前，建议您应用以下临时缓解措施。API 版本可以在 `docker-compose.yml` 文件的 `api` 镜像标签中查看。
+
+1. 在 `api.env` 文件中添加以下一行。如果已经设置了 `JAVA_TOOL_OPTIONS`，请在现有值后面用空格分隔追加该选项。
+
+```
+JAVA_TOOL_OPTIONS=-XX:-UseBASE64Intrinsics
+```
+
+2. 重新创建 API 容器。请在 `docker-compose.yml` 文件所在的目录中执行。
+
+```bash
+docker-compose -p protopie up -d
+```
+
+`docker-compose restart` 不会重新加载 `api.env`，请使用 `up -d`。请务必带上 `-p protopie`。数据保存在卷中，不会受到影响。
+
+3. 确认选项已生效。API 日志中应包含 `Picked up JAVA_TOOL_OPTIONS: -XX:-UseBASE64Intrinsics` 这一行。
+
+```bash
+docker-compose -p protopie logs api
+```
+
+注意事项：
+
+- **请勿在 API 14.x 及更早版本上应用。** 这些版本运行在 Java 8 上，Java 8 无法识别该选项，会导致 API 无法启动。这些版本不受此漏洞影响，无需采取缓解措施。
+- 该缓解措施仅针对 CVE-2026-114938。已修复的 API 镜像发布后，请进行升级。
+
 这是使用 Docker Compose 在您的本地服务器上部署 ProtoPie Enterprise 的官方指南。
 
 ProtoPie Enterprise 属于 ProtoPie 生态系统的一部分，是一种为了方便团队协作的云环境。ProtoPie 生态系统中的云环境包括：
